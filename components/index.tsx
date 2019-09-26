@@ -1,0 +1,1 @@
+export { IconAntDesign, IconMaterialIcons, IconIonicons } from './TabBarIcon'
