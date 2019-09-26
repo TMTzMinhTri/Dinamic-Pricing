@@ -1,9 +1,9 @@
 import { createBottomTabNavigator } from "react-navigation";
-import { HomeStack, UserStack,InventoryStack } from "./stack_navigation";
+import { HomeStack, UserStack, RootInventoryStack } from "./stack_navigation";
 
 const tabNavigator = createBottomTabNavigator({
     HomeStack,
-    InventoryStack,
+    RootInventoryStack,
     UserStack
 });
 
