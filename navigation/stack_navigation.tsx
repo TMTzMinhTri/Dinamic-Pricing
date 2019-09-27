@@ -4,7 +4,7 @@ import { IconIonicons, IconMaterialIcons, IconAntDesign } from '../components/Ta
 import * as Components from "../components";
 
 import { HomeScreen } from "../screens/HomeScreen";
-import { SignInScreen } from "../screens/SignIn";
+import { LandingScreen } from "../screens/LandingPage";
 import { DetailsScreen } from "../screens/DetailScreen";
 
 import { InventoryScreen } from "../screens/InventoryScreen";
@@ -82,5 +82,5 @@ UserStack.navigationOptions = {
 
 
 export const AuthStack = createStackNavigator({
-    SignIn: SignInScreen
+    SignIn: LandingScreen
 });

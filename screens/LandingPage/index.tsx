@@ -2,11 +2,11 @@ import React from "react";
 import { View, Text, Button, AsyncStorage, Image, StyleSheet } from "react-native";
 import { NavigationScreenProps } from "react-navigation";
 
-interface IHomeScreenProps extends NavigationScreenProps {
+interface ILandingScreenProps extends NavigationScreenProps {
 
 }
 
-export class SignInScreen extends React.Component<IHomeScreenProps, {}> {
+export class LandingScreen extends React.Component<ILandingScreenProps, {}> {
     _signInAsync = async () => {
         await AsyncStorage.setItem('userToken', 'abc');
         this.props.navigation.navigate('Main');
