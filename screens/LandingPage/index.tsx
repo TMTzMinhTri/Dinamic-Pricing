@@ -1,19 +1,20 @@
 import React from "react";
-import { View, Text, Button, AsyncStorage, Image, StyleSheet } from "react-native";
+import { View, Text, Button, AsyncStorage, Image, StyleSheet, } from "react-native";
 import { NavigationScreenProps } from "react-navigation";
-
+import { WebView } from 'react-native-webview';
 interface ILandingScreenProps extends NavigationScreenProps {
 
 }
 
 export class LandingScreen extends React.Component<ILandingScreenProps, {}> {
     _signInAsync = async () => {
-        await AsyncStorage.setItem('userToken', 'abc');
-        this.props.navigation.navigate('Main');
+        // await AsyncStorage.setItem('userToken', 'abc');
+        this.props.navigation.navigate('SignIn');
     };
     render() {
         return (
             <View style={styles.container}>
+                {/* <WebView source={{ uri: 'https://facebook.github.io/react-native/' }} /> */}
                 <View style={styles.titleContainer}>
                     <Text style={styles.appTitle}>Hara</Text>
                     <Text style={[styles.appTitle, styles.noPadding]}>Hotdeal</Text>
@@ -29,10 +30,10 @@ export class LandingScreen extends React.Component<ILandingScreenProps, {}> {
                 </View>
                 <View style={styles.functionContainer}>
                     <View style={{ width: '35%', marginRight: 20 }}>
-                        <Button title='Dang nhap' color='#FFEF00' onPress={() => this._signInAsync()} />
+                        <Button title='Dang nhap' color='#000' onPress={() => this._signInAsync()} />
                     </View>
                     <View style={{ width: '35%', marginLeft: 20 }}>
-                        <Button title='Demo' color='#ffff' onPress={() => this._signInAsync()} />
+                        <Button title='Demo' color='#000' onPress={() => this._signInAsync()} />
                     </View>
                 </View>
             </View>
