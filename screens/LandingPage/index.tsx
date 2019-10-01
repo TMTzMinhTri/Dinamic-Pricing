@@ -1,15 +1,27 @@
 import React from "react";
-import { View, Text, Button, Image, StyleSheet, } from "react-native";
-import { NavigationScreenProps } from "react-navigation";
-interface ILandingScreenProps extends NavigationScreenProps {
+import { View, Text, Image, StyleSheet, AsyncStorage, } from "react-native";
+import { NavigationStackProp } from 'react-navigation-stack';
+import { Button } from 'react-native-elements';
 
-}
+type IPropsLandingScreen = {
+    navigation: NavigationStackProp;
+};
+export class LandingScreen extends React.Component<IPropsLandingScreen, {}> {
 
-export class LandingScreen extends React.Component<ILandingScreenProps, {}> {
-    _signInAsync = async () => {
-        this.props.navigation.navigate('Register');
-    };
-    render() {
+    componentDidMount() {
+        const { navigation } = this.props;
+        AsyncStorage.getItem("code").then(res => {
+            if (res) {
+                navigation.navigate("Main");
+            }
+        })
+    }
+
+    private _login = () => { this.props.navigation.navigate('Login') }
+
+    private _register = () => { this.props.navigation.navigate('Register') };
+
+    public render() {
         return (
             <View style={styles.container}>
                 <View style={styles.titleContainer}>
@@ -27,10 +39,14 @@ export class LandingScreen extends React.Component<ILandingScreenProps, {}> {
                 </View>
                 <View style={styles.functionContainer}>
                     <View style={{ width: '35%', marginRight: 20 }}>
-                        <Button title='Đăng ký' color='#000' onPress={() => this._signInAsync()} />
+                        <Button
+                            title="Đăng ký"
+                            onPress={this._register} />
                     </View>
                     <View style={{ width: '35%', marginLeft: 20 }}>
-                        <Button title='Đăng nhập' color='#000' onPress={() => this._signInAsync()} />
+                        <Button
+                            title="Đăng nhập"
+                            onPress={this._login} />
                     </View>
                 </View>
             </View>

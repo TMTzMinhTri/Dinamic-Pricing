@@ -7,9 +7,10 @@ import { HomeScreen } from "../screens/HomeScreen";
 
 import { LandingScreen } from "../screens/LandingPage";
 import { RegisterScreen } from "../screens/LandingPage/RegisterScreen"
+import { LoginScreen } from "../screens/LandingPage/LoginScreen"
 
 import { DetailsScreen } from "../screens/DetailScreen";
-import { ConnectScreen } from "../screens/LoginScreen";
+import { ConnectScreen } from "../screens/ConnectScreen";
 
 import { InventoryScreen } from "../screens/InventoryScreen";
 import { InventoryDetailsScreen } from "../screens/InventoryScreen/Details";
@@ -88,5 +89,6 @@ UserStack.navigationOptions = {
 export const AuthStack = createStackNavigator({
     Landing: LandingScreen,
     Connect: ConnectScreen,
+    Login: LoginScreen,
     Register: RegisterScreen
 });

@@ -4,7 +4,7 @@ import { NavigationStackProp } from 'react-navigation-stack';
 import { Input, Button } from 'react-native-elements';
 
 
-type IPropsRegisterScreen = {
+type IPropsLoginScreen = {
     navigation: NavigationStackProp;
 };
 
@@ -17,30 +17,23 @@ interface Logindata {
     userid: string,
     password: string
 }
-const urlRegister = "/api/register"
-const login = "/api/login"
 
-interface IStateRegisterScreen {
+interface IStateLoginScreen {
     userid: string,
     password: string
-    confirmPassword: string,
-    email: string
 }
 
-export class RegisterScreen extends React.Component<IPropsRegisterScreen, IStateRegisterScreen> {
+
+export class LoginScreen extends React.Component<IPropsLoginScreen, IStateLoginScreen> {
     constructor(props) {
         super(props)
         this.state = {
             userid: "",
-            password: "",
-            confirmPassword: "",
-            email: ""
+            password: ""
         }
     }
     static navigationOptions = ({ navigation, }) => {
-        return {
-            headerTitle: "Đăng ký"
-        };
+        return { headerTitle: "Đăng nhập" };
     }
     render() {
         return <View style={styles.container}>
@@ -65,18 +58,10 @@ export class RegisterScreen extends React.Component<IPropsRegisterScreen, IState
                         onChange={(value) => this.setState({ password: value.nativeEvent.text })}
                         placeholder='mật khẩu'
                     />
-                    <Input
-                        onChange={(value) => this.setState({ confirmPassword: value.nativeEvent.text })}
-                        placeholder='xác nhận mật khẩu'
-                    />
-                    <Input
-                        onChange={(value) => this.setState({ email: value.nativeEvent.text })}
-                        placeholder='email'
-                    />
                 </KeyboardAvoidingView>
             </View>
             <View>
-                <Button title="Đăng ký" onPress={() => this.props.navigation.navigate("Connect")} />
+                <Button title="Đăng nhập" onPress={() => this.props.navigation.navigate("Connect")} />
             </View>
         </View>
     }
