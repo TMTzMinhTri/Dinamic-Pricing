@@ -4,9 +4,12 @@ import { IconIonicons, IconMaterialIcons, IconAntDesign } from '../components/Ta
 import * as Components from "../components";
 
 import { HomeScreen } from "../screens/HomeScreen";
+
 import { LandingScreen } from "../screens/LandingPage";
+import { RegisterScreen } from "../screens/LandingPage/RegisterScreen"
+
 import { DetailsScreen } from "../screens/DetailScreen";
-import { LoginScreen } from "../screens/LoginScreen";
+import { ConnectScreen } from "../screens/LoginScreen";
 
 import { InventoryScreen } from "../screens/InventoryScreen";
 import { InventoryDetailsScreen } from "../screens/InventoryScreen/Details";
@@ -84,5 +87,6 @@ UserStack.navigationOptions = {
 
 export const AuthStack = createStackNavigator({
     Landing: LandingScreen,
-    SignIn: LoginScreen
+    Connect: ConnectScreen,
+    Register: RegisterScreen
 });

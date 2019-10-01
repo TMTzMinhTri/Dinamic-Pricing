@@ -1,20 +1,17 @@
 import React from "react";
-import { View, Text, Button, AsyncStorage, Image, StyleSheet, } from "react-native";
+import { View, Text, Button, Image, StyleSheet, } from "react-native";
 import { NavigationScreenProps } from "react-navigation";
-import { WebView } from 'react-native-webview';
 interface ILandingScreenProps extends NavigationScreenProps {
 
 }
 
 export class LandingScreen extends React.Component<ILandingScreenProps, {}> {
     _signInAsync = async () => {
-        // await AsyncStorage.setItem('userToken', 'abc');
-        this.props.navigation.navigate('SignIn');
+        this.props.navigation.navigate('Register');
     };
     render() {
         return (
             <View style={styles.container}>
-                {/* <WebView source={{ uri: 'https://facebook.github.io/react-native/' }} /> */}
                 <View style={styles.titleContainer}>
                     <Text style={styles.appTitle}>Hara</Text>
                     <Text style={[styles.appTitle, styles.noPadding]}>Hotdeal</Text>
@@ -26,14 +23,14 @@ export class LandingScreen extends React.Component<ILandingScreenProps, {}> {
                         resizeMethod='resize'
                         resizeMode='contain'
                         source={require('../../assets/2456069.png')}
-                    ></Image>
+                    />
                 </View>
                 <View style={styles.functionContainer}>
                     <View style={{ width: '35%', marginRight: 20 }}>
-                        <Button title='Dang nhap' color='#000' onPress={() => this._signInAsync()} />
+                        <Button title='Đăng ký' color='#000' onPress={() => this._signInAsync()} />
                     </View>
                     <View style={{ width: '35%', marginLeft: 20 }}>
-                        <Button title='Demo' color='#000' onPress={() => this._signInAsync()} />
+                        <Button title='Đăng nhập' color='#000' onPress={() => this._signInAsync()} />
                     </View>
                 </View>
             </View>
