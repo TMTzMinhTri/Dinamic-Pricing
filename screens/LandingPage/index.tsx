@@ -17,18 +17,18 @@ export class LandingScreen extends React.Component<IPropsLandingScreen, {}> {
   static navigationOptions = {
     header: null
   };
-  componentDidMount() {
-    const { navigation } = this.props;
-    AsyncStorage.getItem("code").then(res => {
-      if (res) {
-        navigation.navigate("Main");
-      }
-    });
-  }
 
   private _login = () => {
     this.props.navigation.navigate("Login");
   };
+    componentDidMount() {
+        const { navigation } = this.props;
+        AsyncStorage.getItem("login_token").then(res => {
+            if (res) {
+                navigation.navigate("Connect");
+            }
+        })
+    }
 
   private _register = () => {
     this.props.navigation.navigate("Register");

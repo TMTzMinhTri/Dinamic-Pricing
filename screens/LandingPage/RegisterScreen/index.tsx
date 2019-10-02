@@ -1,14 +1,8 @@
 import React from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  Image,
-  KeyboardAvoidingView,
-  TouchableOpacity
-} from "react-native";
-import { NavigationStackProp } from "react-navigation-stack";
-import { Input, Button } from "react-native-elements";
+import { View, Text, StyleSheet, Image, KeyboardAvoidingView, SegmentedControlIOSComponent, AsyncStorage, TouchableOpacity } from "react-native";
+import { NavigationStackProp } from 'react-navigation-stack';
+import { Input, Button } from 'react-native-elements';
+import axios from 'axios'
 
 type IPropsRegisterScreen = {
   navigation: NavigationStackProp;
@@ -33,10 +27,7 @@ interface IStateRegisterScreen {
   email: string;
 }
 
-export class RegisterScreen extends React.Component<
-  IPropsRegisterScreen,
-  IStateRegisterScreen
-> {
+export class RegisterScreen extends React.Component<IPropsRegisterScreen, IStateRegisterScreen> {
   constructor(props) {
     super(props);
     this.state = {
@@ -51,6 +42,40 @@ export class RegisterScreen extends React.Component<
       headerTitle: "Đăng ký"
     };
   };
+  private onSubmit = async () => {
+    // const { email, password, userid } = this.state
+    const email = "12312111", password = "1234", userid = "123123111"
+    const datapost = { email, userid, password }
+    try {
+      let rsp = await axios.post('http://163.47.9.196:8000/api/register', datapost), { data } = rsp
+      console.log(rsp.status)
+      if (data.status === "Success") {
+        try {
+          const logindata = { userid, password }
+          let rsp = await axios.post('http://163.47.9.196:8000/api/login', logindata), { data } = rsp
+          console.log(rsp.data)
+          if (data && data.token) {
+            await AsyncStorage.setItem('login_token', data.token)
+            this.props.navigation.navigate("Connect")
+          }
+        } catch (error) {
+          console.log(error)
+        }
+      }
+    } catch (error) {
+      console.error(error)
+    }
+    // if (rsp.data.status === "Success") { 
+    //     const logindata = JSON.stringify({ userid, password })
+    //     let rsp = await axios.post('/api/login', logindata)
+    //     console.log(rsp)
+
+    //     if (rsp.data.token) {
+    //         await AsyncStorage.setItem('login_token', rsp.data.token)
+    //         this.props.navigation.navigate("Connect")
+    //     }
+    // }
+  }
   render() {
     return (
       <View style={styles.container}>
@@ -101,10 +126,6 @@ export class RegisterScreen extends React.Component<
             justifyContent: "center"
           }}
         >
-          {/* <Button
-            title="Đăng ký"
-            onPress={() => this.props.navigation.navigate("Connect")}
-          /> */}
           <TouchableOpacity
             style={styles.touchbtn}
             onPress={() => this.props.navigation.navigate("Connect")}

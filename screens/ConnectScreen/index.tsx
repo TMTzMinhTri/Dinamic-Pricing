@@ -3,6 +3,7 @@ import { View, StyleSheet, KeyboardAvoidingView, AsyncStorage } from "react-nati
 import { Input, Button } from 'react-native-elements';
 import { NavigationStackProp } from 'react-navigation-stack';
 import { AuthSession } from 'expo';
+import axios from "axios";
 
 interface ILoginScreenState {
     shopName: string
@@ -35,17 +36,49 @@ export class ConnectScreen extends React.Component<IPropsConnectScreen, ILoginSc
         const { navigation } = this.props;
         let redirectUrl = AuthSession.getRedirectUrl();
         let shopName = "harend"
-        const apikey = "3fc24cce86994cac510e117c927bbda4"
+        const apikey = "36d2d4d477b02bde8cd716af0c0272dd"
         let result: any = await AuthSession.startAsync({
             authUrl:
                 `https://${shopName}.myharavan.com/admin/api/auth/?api_key=${apikey}&redirect_uri=${encodeURIComponent(redirectUrl)}`,
         });
         const { type } = result;
-
+        console.log(result)
 
         if (type === 'success') {
             await AsyncStorage.setItem("code", result.params.code)
+            await AsyncStorage.setItem("shop", result.params.shop)
             navigation.navigate("Main");
+
+            // try {
+            //     const url = "http://163.47.9.196:8000/api/updatecode "
+            //     const token = await AsyncStorage.getItem("login_token")
+            //     let rsp = await axios.post(url, {
+            //         code: result.params.code,
+            //         shop_name: result.params.shop
+            //     }, {
+            //         headers: { "Authorization": token }
+            //     })
+            //     console.log(rsp.data)
+            // } catch (error) {
+
+            // }
+
+
+        }
+    }
+
+    private sendToken = async (result) => {
+        try {
+            const url = "http://163.47.9.196:8000/api/updatecode"
+            const token = await AsyncStorage.getItem("login_token")
+            let rsp = await axios.post(url, {
+                code: result.params.code,
+                shop_name: result.params.shop
+            }, {
+                headers: { "Authorization": token }
+            })
+            console.log(rsp.data)
+        } catch (error) {
 
         }
     }

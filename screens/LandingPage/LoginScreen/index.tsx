@@ -1,14 +1,9 @@
 import React from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  Image,
-  KeyboardAvoidingView,
-  TouchableOpacity
-} from "react-native";
-import { NavigationStackProp } from "react-navigation-stack";
-import { Input, Button } from "react-native-elements";
+import { View, Text, StyleSheet, Image, KeyboardAvoidingView, AsyncStorage, TouchableOpacity } from "react-native";
+import { NavigationStackProp } from 'react-navigation-stack';
+import { Input, Button } from 'react-native-elements';
+import Axios from "axios";
+
 
 type IPropsLoginScreen = {
   navigation: NavigationStackProp;
@@ -32,7 +27,7 @@ interface IStateLoginScreen {
 export class LoginScreen extends React.Component<
   IPropsLoginScreen,
   IStateLoginScreen
-> {
+  > {
   constructor(props) {
     super(props);
     this.state = {
@@ -43,6 +38,15 @@ export class LoginScreen extends React.Component<
   static navigationOptions = ({ navigation }) => {
     return { headerTitle: "Đăng nhập" };
   };
+  private onsubmit = async () => {
+    const url = "http://163.47.9.196:8000/api/login"
+    const userid = "kalkalkal", password = "123123123"
+    let rsp = await Axios.post(url, { userid, password }), { data } = rsp
+    if (data && data.token) {
+      await AsyncStorage.setItem('login_token', data.token)
+      this.props.navigation.navigate("Connect")
+    }
+  }
   render() {
     return (
       <View style={styles.container}>
@@ -81,13 +85,9 @@ export class LoginScreen extends React.Component<
             justifyContent: "center"
           }}
         >
-          {/* <Button
-            title="Đăng ký"
-            onPress={() => this.props.navigation.navigate("Connect")}
-          /> */}
           <TouchableOpacity
             style={styles.touchbtn}
-            onPress={() => this.props.navigation.navigate("Connect")}
+            onPress={() => this.onsubmit}
           >
             <Text>Đăng nhập</Text>
           </TouchableOpacity>
