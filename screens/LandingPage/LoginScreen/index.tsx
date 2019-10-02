@@ -24,10 +24,7 @@ interface IStateLoginScreen {
   password: string;
 }
 
-export class LoginScreen extends React.Component<
-  IPropsLoginScreen,
-  IStateLoginScreen
-  > {
+export class LoginScreen extends React.Component<IPropsLoginScreen, IStateLoginScreen> {
   constructor(props) {
     super(props);
     this.state = {
