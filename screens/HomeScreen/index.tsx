@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, Button, TouchableOpacity, AsyncStorage, ActivityIndicator, StyleSheet } from "react-native";
+import { View, Text, Button, TouchableOpacity, AsyncStorage, ActivityIndicator, StyleSheet, Alert } from "react-native";
 import { NavigationScreenProps } from "react-navigation";
 import axios from "axios";
 
@@ -24,8 +24,18 @@ export class HomeScreen extends React.Component<IHomeScreenProps, IHomeScreenSta
     };
     componentDidMount() {
         this.setState({ loading: true }, () => {
-            this.sendToken(() => {
-                this.setState({ loading: false })
+            this.sendToken((value) => {
+                this.setState({ loading: false }, () => {
+                    value === true
+                        ? Alert.alert(
+                            'Cảnh báo',
+                            'Vui lòng kết nối lại',
+                            [
+                                { text: 'OK', onPress: () => this._clearToken() },
+                            ]
+                        )
+                        : null
+                })
             })
         })
     }
@@ -47,7 +57,7 @@ export class HomeScreen extends React.Component<IHomeScreenProps, IHomeScreenSta
         } catch (error) {
             console.log(error)
         }
-        callback()
+        callback(true)
     }
 
     render() {

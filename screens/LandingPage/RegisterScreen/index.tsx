@@ -65,34 +65,24 @@ export class RegisterScreen extends React.Component<IPropsRegisterScreen, IState
     } catch (error) {
       console.error(error)
     }
-    // if (rsp.data.status === "Success") { 
-    //     const logindata = JSON.stringify({ userid, password })
-    //     let rsp = await axios.post('/api/login', logindata)
-    //     console.log(rsp)
-
-    //     if (rsp.data.token) {
-    //         await AsyncStorage.setItem('login_token', rsp.data.token)
-    //         this.props.navigation.navigate("Connect")
-    //     }
-    // }
   }
   render() {
     return (
-      <View style={styles.container}>
-        <View style={styles.header}>
-          <Image
-            style={{
-              width: 90,
-              height: 90
-            }}
-            resizeMethod="resize"
-            resizeMode="contain"
-            source={require("../../../assets/images.png")}
-          />
-          <Text style={{ fontSize: 20, color: "#162B97" }}>HaraHotdeal</Text>
-        </View>
-        <View>
-          <KeyboardAvoidingView enabled behavior="padding">
+      <KeyboardAvoidingView enabled behavior="padding" style={{flex:1}}>
+        <View style={styles.container}>
+          <View style={styles.header}>
+            <Image
+              style={{
+                width: 90,
+                height: 90
+              }}
+              resizeMethod="resize"
+              resizeMode="contain"
+              source={require("../../../assets/images.png")}
+            />
+            <Text style={{ fontSize: 20, color: "#162B97" }}>HaraHotdeal</Text>
+          </View>
+          <View style={styles.body}>
             <Input
               onChange={value =>
                 this.setState({ userid: value.nativeEvent.text })
@@ -117,43 +107,41 @@ export class RegisterScreen extends React.Component<IPropsRegisterScreen, IState
               }
               placeholder="email"
             />
-          </KeyboardAvoidingView>
+            <TouchableOpacity
+              style={styles.touchbtn}
+              onPress={() => this.props.navigation.navigate("Connect")}
+            >
+              <Text>Đăng ký</Text>
+            </TouchableOpacity>
+          </View>
         </View>
-        <View
-          style={{
-            marginTop: 20,
-            alignItems: "center",
-            justifyContent: "center"
-          }}
-        >
-          <TouchableOpacity
-            style={styles.touchbtn}
-            onPress={() => this.props.navigation.navigate("Connect")}
-          >
-            <Text>Đăng ký</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
+      </KeyboardAvoidingView>
+
     );
   }
 }
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    flexDirection: "column",
-    paddingHorizontal: 10
+    paddingHorizontal: 20
   },
 
   header: {
+    flex: 0.3,
     alignItems: "center",
     justifyContent: "center"
   },
+  body: {
+    flex: 0.7,
+
+  },
   touchbtn: {
-    backgroundColor: "#FFEF00",
+    marginTop:30,
+    backgroundColor: "rgb(127,	162,	244	)",
     borderRadius: 30,
     alignItems: "center",
     justifyContent: "center",
-    height: 50,
+    height: 40,
     width: "100%"
   }
 });

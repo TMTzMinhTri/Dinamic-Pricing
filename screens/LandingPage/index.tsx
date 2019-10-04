@@ -19,19 +19,19 @@ export class LandingScreen extends React.Component<IPropsLandingScreen, {}> {
   };
 
   private _login = () => {
-    this.props.navigation.navigate("Login");
+    this.props.navigation.push("Login");
   };
     componentDidMount() {
         const { navigation } = this.props;
         AsyncStorage.getItem("login_token").then(res => {
             if (res) {
-                navigation.navigate("Connect");
+                navigation.push("Register");
             }
         })
     }
 
   private _register = () => {
-    this.props.navigation.navigate("Register");
+    this.props.navigation.push("Register");
   };
 
   public render() {
@@ -53,14 +53,14 @@ export class LandingScreen extends React.Component<IPropsLandingScreen, {}> {
           />
         </View>
         <View style={styles.functionContainer}>
-          <View style={{ width: "35%", marginRight: 20 }}>
+          <View style={{ width: "35%"}}>
             <TouchableOpacity style={styles.touchbtn} onPress={this._register}>
-              <Text>Đăng ký</Text>
+              <Text style={{fontSize:16, fontWeight:"bold"}}>Đăng ký</Text>
             </TouchableOpacity>
           </View>
-          <View style={{ width: "35%", marginRight: 20 }}>
+          <View style={{ width: "35%" }}>
             <TouchableOpacity style={styles.touchbtn} onPress={this._login}>
-              <Text>Đăng nhập</Text>
+              <Text  style={{fontSize:16, fontWeight:"bold"}}>Đăng nhập</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -73,38 +73,36 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: "column",
-
-    paddingHorizontal: 10
   },
   titleContainer: {
-    flex: 0.35,
+    flex: 0.3,
     flexDirection: "column",
     paddingHorizontal: 20,
-    justifyContent: "center",
+    justifyContent: "flex-end",
     alignItems: "flex-start",
-    marginBottom: -20,
-    paddingBottom: 0
   },
   imageContainer: {
-    flex: 0.5
+    flex: 0.5,
   },
   touchbtn: {
     width: 120,
     height: 40,
     alignItems: "center",
     justifyContent: "center",
-    borderRadius: 30,
-    backgroundColor: "#FFEF00",
-    shadowColor: "rgba(0, 0, 0, 0.1)",
-    shadowOpacity: 0.8,
-    shadowRadius: 15
+    borderRadius: 3,
+    backgroundColor: "rgb(127,	162,	244	)",
+    shadowColor: "rgba(0, 0, 0,0.24)",
+    shadowOpacity: 1,
+    shadowRadius: 15,
+    shadowOffset:{  width: 0,  height: 8,  },
   },
 
   functionContainer: {
-    flex: 0.15,
+    flex: 0.2,
+    paddingHorizontal: 20,
     flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center"
+    justifyContent: "space-around",
+    marginTop:30
   },
   appTitle: {
     fontSize: 36,
@@ -118,15 +116,5 @@ const styles = StyleSheet.create({
   description: {
     color: "#686C80",
     marginTop: 12
-  },
-
-  loginButton: {
-    flex: 1,
-    color: "#000"
-  },
-
-  demoButton: {
-    flex: 1,
-    color: "#000"
   }
 });
