@@ -87,7 +87,7 @@ export class LoginScreen extends React.Component<
         >
           <TouchableOpacity
             style={styles.touchbtn}
-            onPress={() => this.onsubmit}
+            onPress={this.onsubmit}
           >
             <Text>Đăng nhập</Text>
           </TouchableOpacity>
