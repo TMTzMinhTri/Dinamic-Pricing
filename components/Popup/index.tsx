@@ -4,7 +4,7 @@ import { NavigationStackProp } from 'react-navigation-stack';
 
 
 type IModalProps = {
-    navigation: NavigationStackProp;
+    navigation?: NavigationStackProp;
     modalVisible: boolean,
     OnofModal: Function
 };
@@ -13,13 +13,10 @@ export class Modals extends React.Component<IModalProps> {
     render() {
         return (
             <Modal
-                animationType="slide"
-                transparent={false}
+                animationType="fade"
+                transparent={true}
                 visible={this.props.modalVisible}
-                presentationStyle="pageSheet"
-                onRequestClose={() => {
-                    Alert.alert('Modal has been closed.');
-                }}>
+                presentationStyle="overFullScreen">
                 <View style={style.container} >
                     <View style={style.body}>
                         <Text>Hello World!</Text>
@@ -36,16 +33,20 @@ export class Modals extends React.Component<IModalProps> {
 }
 const style = StyleSheet.create({
     container: {
-        flex: 0.5,
+        flex: 1,
         justifyContent: "center",
         alignItems: "center",
-        backgroundColor: "red"
+        backgroundColor: "rgba(0, 0, 0, .8)"
     },
     body: {
+        flex: 0.4,
         justifyContent: "center",
         alignItems: "center",
-        width: "50%",
-        height: "50%"
+        width: "70%",
+        color: "#fff",
+        opacity:1,
+        backgroundColor: "#fff"
+
     }
 
 })
