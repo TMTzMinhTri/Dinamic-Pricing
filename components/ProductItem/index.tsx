@@ -8,7 +8,8 @@ type IProductItemProps = {
     navigation?: NavigationStackProp;
     data: IProductItem
     onChange: Function,
-    screen: "inventory" | "home"
+    screen: "inventory" | "home",
+    onTouchImage: Function
 };
 
 interface IStateProductItem {
@@ -27,18 +28,18 @@ export class ProductItem extends React.Component<IProductItemProps, IStateProduc
 
     render() {
         const { modalVisible } = this.state
-        const { data, onChange, screen } = this.props
+        const { data, onChange, screen, onTouchImage } = this.props
         const getdate = new Date(data.last_updated)
         const date = getdate.getDate();
         const month = getdate.getMonth();
         const year = getdate.getFullYear()
         return (
             < View style={styles.container} >
-                <View style={{ flex: 0.4 }}>
+                <View style={{ flex: 0.4 }} onTouchStart={() => onTouchImage(data)}>
                     <Image source={{ uri: data.image.src }}
                         style={{ width: 150, height: 150 }} />
                 </View>
-                <View style={styles.content}>
+                <View style={styles.content} >
                     <Text style={styles.title}>{data.product_title}</Text>
                     <Text style={styles.item}>Tồn kho: {data.quantity}</Text>
                     <Text style={styles.item}>Ngày nhập: {date}-{month}-{year}</Text>
@@ -57,7 +58,7 @@ export class ProductItem extends React.Component<IProductItemProps, IStateProduc
                             </View>
                             : <View style={{ alignItems: "center" }}>
                                 <View style={styles.butondisable}>
-                                    <Text style={{color:"#fff"}}>Đã bật khuyến mãi</Text>
+                                    <Text style={{ color: "#fff" }}>Đã bật khuyến mãi</Text>
                                 </View>
                             </View>}
                 </View>

@@ -83,6 +83,11 @@ export class InventoryScreen extends React.Component<IInventoryScreenProps, IInv
             })
         })
     }
+    onTouchImage = (data) => {
+        this.props.navigation.navigate("Details", {
+            data
+        })
+    }
 
     render() {
         console.log(this.state)
@@ -94,7 +99,11 @@ export class InventoryScreen extends React.Component<IInventoryScreenProps, IInv
                     <FlatList
                         data={listProduct}
                         refreshControl={<RefreshControl refreshing={refreshing} onRefresh={this.onRefresh} />}
-                        renderItem={({ item }) => <Component.ProductItem data={item} onChange={this.handlePromotionStatus} screen="inventory" />}
+                        renderItem={({ item }) => <Component.ProductItem
+                            data={item}
+                            onTouchImage={this.onTouchImage}
+                            onChange={this.handlePromotionStatus}
+                            screen="inventory" />}
                         keyExtractor={({ id }) => id.toString()} />
                 </View>
                 : <ActivityIndicator size="large" color="#00ff00" />
