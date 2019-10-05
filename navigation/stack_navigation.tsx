@@ -18,6 +18,14 @@ import { InventoryDetailsScreen } from "../screens/InventoryScreen/Details";
 export const HomeStack = createStackNavigator({
     Home: HomeScreen,
     Details: DetailsScreen
+}, {
+    initialRouteName: 'Home',
+    defaultNavigationOptions: {
+        headerTintColor: '#162B97',
+        headerTitleStyle: {
+            fontWeight: 'bold',
+        },
+    },
 });
 
 HomeStack.navigationOptions = {

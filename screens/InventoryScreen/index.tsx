@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, Button, TouchableOpacity, AsyncStorage, Alert, ScrollView, ActivityIndicator, FlatList } from "react-native";
+import { View, Text, Button, TouchableOpacity, AsyncStorage, Alert, ScrollView, ActivityIndicator, FlatList, RefreshControl } from "react-native";
 import { NavigationStackProp } from 'react-navigation-stack';
 import * as Component from "../../components";
 import Axios from "axios";
@@ -12,7 +12,8 @@ type IInventoryScreenProps = {
 interface IInventoryScreenState {
     modalVisible: boolean,
     listProduct: IProductItem[],
-    loading: boolean
+    loading: boolean,
+    refreshing: boolean
 }
 export interface IProductItem {
     compare_at_price: number,
@@ -39,7 +40,8 @@ export class InventoryScreen extends React.Component<IInventoryScreenProps, IInv
         this.state = {
             modalVisible: false,
             listProduct: [],
-            loading: false
+            loading: false,
+            refreshing: false
         }
     }
     date = 14
@@ -65,20 +67,34 @@ export class InventoryScreen extends React.Component<IInventoryScreenProps, IInv
         callback(rsp.data)
     }
     private handlePromotionStatus = (value) => {
-
+        this.setState({ loading: value }, () => {
+            this.getData((data) => {
+                this.setState({ listProduct: data, loading: false })
+            })
+        })
     }
     __OnoffModal = (visible: boolean) => {
         this.setState({ modalVisible: visible })
     }
+    private onRefresh = () => {
+        this.setState({ refreshing: true }, () => {
+            this.getData((data) => {
+                this.setState({ listProduct: data, refreshing: false })
+            })
+        })
+    }
+
     render() {
         console.log(this.state)
-        const { listProduct, loading, modalVisible } = this.state
+        const { listProduct, loading, refreshing } = this.state
         return (<View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+
             {loading === false
                 ? < View style={{ flexDirection: "row", alignItems: "stretch", padding: 10 }}>
                     <FlatList
                         data={listProduct}
-                        renderItem={({ item }) => <Component.ProductItem data={item} />}
+                        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={this.onRefresh} />}
+                        renderItem={({ item }) => <Component.ProductItem data={item} onChange={this.handlePromotionStatus} />}
                         keyExtractor={({ id }) => id.toString()} />
                 </View>
                 : <ActivityIndicator size="large" color="#00ff00" />

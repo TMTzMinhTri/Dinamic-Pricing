@@ -8,7 +8,8 @@ type IModalProps = {
     navigation?: NavigationStackProp;
     modalVisible: boolean,
     OnofModal: Function,
-    item: IProductItem
+    item: IProductItem,
+    onchange: Function
 };
 interface IState {
     processing: boolean
@@ -23,6 +24,7 @@ export class Modals extends React.Component<IModalProps, IState> {
     }
 
     private Submit = () => {
+        const { OnofModal, onchange } = this.props
         this.setState({ processing: true }, async () => {
             const { item } = this.props, { id } = item, percent = 20
             const url = `http://163.47.9.196:8000/api/data/variants/${id}/${percent}`
@@ -32,13 +34,16 @@ export class Modals extends React.Component<IModalProps, IState> {
             }), { status } = rsp
             if (status === 200) {
                 this.setState({ processing: false }, () => {
-                    this.props.OnofModal(false)
+                    OnofModal(false)
+                    onchange(true)
+
                 })
             }
         })
     }
 
     private OffPromotion = (id: number) => {
+        const { OnofModal, onchange } = this.props
         this.setState({ processing: true }, async () => {
             const url = `http://163.47.9.196:8000/api/data/variants/offpromote/${id}`
             const token = await AsyncStorage.getItem("login_token")
@@ -48,7 +53,8 @@ export class Modals extends React.Component<IModalProps, IState> {
             console.log(rsp)
             if (status === 200) {
                 this.setState({ processing: false }, () => {
-                    this.props.OnofModal(false)
+                    OnofModal(false)
+                    onchange(true)
                 })
             }
         })

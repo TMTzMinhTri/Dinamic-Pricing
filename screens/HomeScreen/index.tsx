@@ -1,5 +1,5 @@
 import React from "react";
-import { View, FlatList, Button, TouchableOpacity, AsyncStorage, ActivityIndicator, StyleSheet, Alert } from "react-native";
+import { View, FlatList, Button, TouchableOpacity, AsyncStorage, ActivityIndicator, StyleSheet, Text, RefreshControl } from "react-native";
 import { NavigationScreenProps } from "react-navigation";
 import axios from "axios";
 
@@ -12,14 +12,23 @@ interface IHomeScreenProps extends NavigationScreenProps {
 interface IHomeScreenState {
     loading: boolean,
     ListProduct: IProductItem[]
+    refreshing: boolean
+
 }
 export class HomeScreen extends React.Component<IHomeScreenProps, IHomeScreenState> {
     constructor(props) {
         super(props)
         this.state = {
             loading: false,
-            ListProduct: []
+            ListProduct: [],
+            refreshing: false
+
         }
+    }
+    static navigationOptions = ({ navigation, }) => {
+        return {
+            headerTitle: "HaraHotdeal"
+        };
     }
     _clearToken = async () => {
         await AsyncStorage.clear();
@@ -30,6 +39,9 @@ export class HomeScreen extends React.Component<IHomeScreenProps, IHomeScreenSta
             this.getListProductPromoting()
         })
     }
+    componentWillUnmount() {
+        console.log('aaa')
+    }
 
     private getListProductPromoting = async () => {
         const token = await AsyncStorage.getItem("login_token")
@@ -39,7 +51,8 @@ export class HomeScreen extends React.Component<IHomeScreenProps, IHomeScreenSta
         })
         this.setState({
             ListProduct: rsp.data,
-            loading: false
+            loading: false,
+            refreshing: false
         })
     }
     private sendToken = async (callback: Function = () => { }) => {
@@ -62,16 +75,31 @@ export class HomeScreen extends React.Component<IHomeScreenProps, IHomeScreenSta
         }
         callback(true)
     }
-
+    private handlePromotionStatus = (value) => {
+        this.setState({ loading: value }, () => {
+            this.getListProductPromoting()
+        })
+    }
+    private onRefresh = () => {
+        this.setState({ refreshing: true }, () => {
+            this.getListProductPromoting()
+        })
+    }
     render() {
-        const { loading, ListProduct } = this.state
+        const { loading, ListProduct, refreshing } = this.state
         return loading === false
             ? <View style={{ flex: 1 }} >
-                <FlatList
-                    data={ListProduct}
-                    renderItem={({ item }) => <Component.ProductItem data={item} />}
-                    keyExtractor={({ id }) => `product_promoting_${id}`}
-                />
+                {ListProduct.length > 0
+                    ? <FlatList
+                        data={ListProduct}
+                        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={this.onRefresh} />}
+                        renderItem={({ item }) => <Component.ProductItem data={item} onChange={this.handlePromotionStatus} />}
+                        keyExtractor={({ id }) => `product_promoting_${id}`}
+                    />
+                    : <View style={{ justifyContent: "center", alignItems: "center", flex: 1 }}>
+                        <Text style={{ fontSize: 20 }}>Chưa có sản phẩm đang khuyến mãi</Text>
+                    </View>
+                }
             </View >
             : <View style={[styles.container, styles.horizontal]}>
                 <ActivityIndicator size="large" color="#00ff00" />

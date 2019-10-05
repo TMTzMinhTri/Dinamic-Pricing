@@ -7,29 +7,26 @@ import * as Component from "../../components";
 type IProductItemProps = {
     navigation?: NavigationStackProp;
     data: IProductItem
+    onChange: Function
 };
 
 interface IStateProductItem {
-    modalVisible: boolean
+    modalVisible: boolean,
 }
 export class ProductItem extends React.Component<IProductItemProps, IStateProductItem> {
     constructor(props) {
         super(props)
         this.state = {
-            modalVisible: false
+            modalVisible: false,
         }
     }
     __OnoffModal = (visible: boolean) => {
         this.setState({ modalVisible: visible })
     }
-    componentDidUpdate(pre: IProductItemProps) {
-        if (pre.data.is_promoting !== this.props.data.is_promoting){
-            this.setState({})
-        }
-    }
+
     render() {
         const { modalVisible } = this.state
-        const { data } = this.props
+        const { data, onChange } = this.props
         const getdate = new Date(data.last_updated)
         const date = getdate.getDate();
         const month = getdate.getMonth();
@@ -44,7 +41,6 @@ export class ProductItem extends React.Component<IProductItemProps, IStateProduc
                     <Text style={styles.title}>{data.product_name}</Text>
                     <Text style={styles.item}>Tồn kho: {data.quantity}</Text>
                     <Text style={styles.item}>Ngày nhập: {date}-{month}-{year}</Text>
-                    <Text style={styles.item}>Chưa phát sinh giao dịch</Text>
                     <Text style={styles.item}>{data.price}</Text>
                     {data.is_promoting === 0
                         ? <TouchableOpacity style={styles.button} onPress={() => this.__OnoffModal(true)}>
@@ -54,7 +50,7 @@ export class ProductItem extends React.Component<IProductItemProps, IStateProduc
                             <Text style={styles.buttonLabel}>Đã bật Khuyến mãi</Text>
                         </TouchableOpacity>}
                 </View>
-                <Component.Modals modalVisible={modalVisible} OnofModal={this.__OnoffModal} item={data} />
+                <Component.Modals modalVisible={modalVisible} OnofModal={this.__OnoffModal} item={data} onchange={onChange} />
             </View >
         );
     }
