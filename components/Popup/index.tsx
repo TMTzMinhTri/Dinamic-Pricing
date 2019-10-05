@@ -71,33 +71,42 @@ export class Modals extends React.Component<IModalProps, IState> {
                 presentationStyle="overFullScreen">
                 <View style={style.container} >
                     <View style={style.body}>
-                        <Text>Chương trình khuyến mãi</Text>
-                        <Text>{item.product_title}</Text>
-                        <Text>Khuyễn mãi {item.promote_percent} %</Text>
-                        <Image source={{ uri: item.image.src }} />
-                        <Text>{item.price}</Text>
-                        <View >
-                            <Text>Thông tin chi tiết</Text>
-                            <Text>Giá gốc: {item.base_price}</Text>
-                            <Text>Giá bán sau khi khuyến mai: {item.price}</Text>
+                        <View style={{ flex: 0.1, borderBottomWidth: 1, borderBottomColor: "#555", alignItems: "center" }}>
+                            <Text style={{ fontSize: 20, fontWeight: "bold" }}>Chương trình khuyến mãi</Text>
                         </View>
-                        <TouchableHighlight
-                            onPress={() => this.props.OnofModal(false)}>
-                            <Text>Huỷ</Text>
-                        </TouchableHighlight>
-                        {item.is_promoting === 0
-                            ? <TouchableHighlight
-                                onPress={this.Submit}>
-                                {processing === false
-                                    ? <Text>Đồng ý</Text>
-                                    : <ActivityIndicator size="small" color="#00ff00" />}
+                        <View style={{ flex: 0.6, justifyContent: "center" }}>
+                            <Text>{item.product_title}</Text>
+                            <Text>Khuyễn mãi {item.promote_percent} %</Text>
+                            <Image source={{ uri: item.image.src }} />
+                            <Text>{item.price}</Text>
+                            <View >
+                                <Text>Thông tin chi tiết</Text>
+                                <Text>Giá gốc: {item.base_price}</Text>
+                                <Text>Giá bán sau khi khuyến mai: {item.price}</Text>
+                            </View>
+                        </View>
+                        <View style={{ flexDirection: "row", flex: 0.2, alignItems: "center", justifyContent:"space-between" }}>
+                            <TouchableHighlight
+                                style={{ backgroundColor: "#aaa", paddingHorizontal: 20, paddingVertical: 10, borderRadius: 5 }}
+                                onPress={() => this.props.OnofModal(false)}>
+                                <Text>Huỷ</Text>
                             </TouchableHighlight>
-                            : <TouchableHighlight
-                                onPress={() => this.OffPromotion(item.id)}>
-                                {processing === false
-                                    ? <Text>Tắt</Text>
-                                    : <ActivityIndicator size="small" color="#00ff00" />}
-                            </TouchableHighlight>}
+                            {item.is_promoting === 0
+                                ? <TouchableHighlight
+                                    style={{ backgroundColor: "rgb(127,	162,244	)", paddingHorizontal: 20, paddingVertical: 10, borderRadius: 5, marginLeft: 20 }}
+                                    onPress={this.Submit}>
+                                    {processing === false
+                                        ? <Text>Đồng ý</Text>
+                                        : <ActivityIndicator size="small" color="#00ff00" />}
+                                </TouchableHighlight>
+                                : <TouchableHighlight
+                                style={{ backgroundColor: "rgb(127,	162,244	)", paddingHorizontal: 20, paddingVertical: 10, borderRadius: 5, marginLeft: 20 }}
+                                    onPress={() => this.OffPromotion(item.id)}>
+                                    {processing === false
+                                        ? <Text>Tắt</Text>
+                                        : <ActivityIndicator size="small" color="#00ff00" />}
+                                </TouchableHighlight>}
+                        </View>
                     </View>
                 </View>
             </Modal>
@@ -112,7 +121,7 @@ const style = StyleSheet.create({
         backgroundColor: "rgba(0, 0, 0, .8)"
     },
     body: {
-        flex: 0.4,
+        flex: 0.3,
         justifyContent: "center",
         alignItems: "center",
         width: "70%",
