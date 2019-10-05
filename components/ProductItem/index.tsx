@@ -75,8 +75,9 @@ const styles = StyleSheet.create({
         marginVertical: 20
     },
     content: {
-        marginLeft: 20,
+        marginLeft: 30,
         flex: 0.6,
+
     },
     title: {
         fontSize: 16,
@@ -90,7 +91,7 @@ const styles = StyleSheet.create({
         paddingVertical: 10,
         backgroundColor: "rgb(0, 132, 255);",
         borderRadius: 5,
-        width: "80%"
+        width: "90%"
 
     },
     buttonLabel: {
@@ -102,6 +103,6 @@ const styles = StyleSheet.create({
         paddingVertical: 10,
         backgroundColor: "rgb(127,	162,	244	)",
         borderRadius: 5,
-        width: "80%"
+        width: "90%"
     }
 })
