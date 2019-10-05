@@ -93,7 +93,7 @@ export class HomeScreen extends React.Component<IHomeScreenProps, IHomeScreenSta
                     ? <FlatList
                         data={ListProduct}
                         refreshControl={<RefreshControl refreshing={refreshing} onRefresh={this.onRefresh} />}
-                        renderItem={({ item }) => <Component.ProductItem data={item} onChange={this.handlePromotionStatus} />}
+                        renderItem={({ item }) => <Component.ProductItem data={item} onChange={this.handlePromotionStatus} screen="home" />}
                         keyExtractor={({ id }) => `product_promoting_${id}`}
                     />
                     : <View style={{ justifyContent: "center", alignItems: "center", flex: 1 }}>

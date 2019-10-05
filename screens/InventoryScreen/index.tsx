@@ -94,7 +94,7 @@ export class InventoryScreen extends React.Component<IInventoryScreenProps, IInv
                     <FlatList
                         data={listProduct}
                         refreshControl={<RefreshControl refreshing={refreshing} onRefresh={this.onRefresh} />}
-                        renderItem={({ item }) => <Component.ProductItem data={item} onChange={this.handlePromotionStatus} />}
+                        renderItem={({ item }) => <Component.ProductItem data={item} onChange={this.handlePromotionStatus} screen="inventory" />}
                         keyExtractor={({ id }) => id.toString()} />
                 </View>
                 : <ActivityIndicator size="large" color="#00ff00" />

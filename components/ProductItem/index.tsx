@@ -7,7 +7,8 @@ import * as Component from "../../components";
 type IProductItemProps = {
     navigation?: NavigationStackProp;
     data: IProductItem
-    onChange: Function
+    onChange: Function,
+    screen: "inventory" | "home"
 };
 
 interface IStateProductItem {
@@ -26,7 +27,7 @@ export class ProductItem extends React.Component<IProductItemProps, IStateProduc
 
     render() {
         const { modalVisible } = this.state
-        const { data, onChange } = this.props
+        const { data, onChange, screen } = this.props
         const getdate = new Date(data.last_updated)
         const date = getdate.getDate();
         const month = getdate.getMonth();
@@ -38,17 +39,27 @@ export class ProductItem extends React.Component<IProductItemProps, IStateProduc
                         style={{ width: 150, height: 150 }} />
                 </View>
                 <View style={styles.content}>
-                    <Text style={styles.title}>{data.product_name}</Text>
+                    <Text style={styles.title}>{data.product_title}</Text>
                     <Text style={styles.item}>Tồn kho: {data.quantity}</Text>
                     <Text style={styles.item}>Ngày nhập: {date}-{month}-{year}</Text>
-                    <Text style={styles.item}>{data.price}</Text>
+                    <Text style={styles.item}>Giá hiện tại: {data.price}</Text>
                     {data.is_promoting === 0
-                        ? <TouchableOpacity style={styles.button} onPress={() => this.__OnoffModal(true)}>
-                            <Text style={styles.buttonLabel}>Bật khuyến mãi</Text>
-                        </TouchableOpacity>
-                        : <TouchableOpacity style={styles.button} onPress={() => this.__OnoffModal(true)}>
-                            <Text style={styles.buttonLabel}>Đã bật Khuyến mãi</Text>
-                        </TouchableOpacity>}
+                        ? <View style={{ alignItems: "center" }}>
+                            <TouchableOpacity style={styles.button} onPress={() => this.__OnoffModal(true)}>
+                                <Text style={styles.buttonLabel}>Bật khuyến mãi</Text>
+                            </TouchableOpacity>
+                        </View>
+                        : screen === "home"
+                            ? <View style={{ alignItems: "center" }}>
+                                <TouchableOpacity style={styles.button} onPress={() => this.__OnoffModal(true)}>
+                                    <Text style={styles.buttonLabel}>Đã bật Khuyến mãi</Text>
+                                </TouchableOpacity>
+                            </View>
+                            : <View style={{ alignItems: "center" }}>
+                                <View style={styles.butondisable}>
+                                    <Text style={{color:"#fff"}}>Đã bật khuyến mãi</Text>
+                                </View>
+                            </View>}
                 </View>
                 <Component.Modals modalVisible={modalVisible} OnofModal={this.__OnoffModal} item={data} onchange={onChange} />
             </View >
@@ -67,22 +78,29 @@ const styles = StyleSheet.create({
         flex: 0.6,
     },
     title: {
-        fontSize: 18,
+        fontSize: 16,
         fontWeight: "bold"
     },
     item: {
-        fontSize: 18,
-        lineHeight: 25
+        lineHeight: 20
     },
     button: {
         paddingHorizontal: 20,
         paddingVertical: 10,
-        backgroundColor: "#162B97",
-        borderRadius: 20
+        backgroundColor: "rgb(0, 132, 255);",
+        borderRadius: 5,
+        width: "80%"
+
     },
     buttonLabel: {
         color: "#fff",
         textAlign: "center",
-        fontSize: 16
+    },
+    butondisable: {
+        paddingHorizontal: 20,
+        paddingVertical: 10,
+        backgroundColor: "rgb(127,	162,	244	)",
+        borderRadius: 5,
+        width: "80%"
     }
 })
