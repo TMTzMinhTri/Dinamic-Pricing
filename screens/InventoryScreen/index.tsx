@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, Button, TouchableOpacity, AsyncStorage, Alert, ScrollView, ActivityIndicator } from "react-native";
+import { View, Text, Button, TouchableOpacity, AsyncStorage, Alert, ScrollView, ActivityIndicator, FlatList } from "react-native";
 import { NavigationStackProp } from 'react-navigation-stack';
 import * as Component from "../../components";
 import Axios from "axios";
@@ -68,16 +68,12 @@ export class InventoryScreen extends React.Component<IInventoryScreenProps, IInv
         console.log(this.state)
         const { listProduct, loading, modalVisible } = this.state
         return (<View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-            <Button title="click" onPress={() => this.__OnoffModal(true)} />
-            <Component.Modals modalVisible={modalVisible} OnofModal={this.__OnoffModal} />
             {loading === false
                 ? < View style={{ flexDirection: "row", alignItems: "stretch", padding: 10 }}>
-                    <ScrollView>
-                        {listProduct.map((product, index) => {
-                            const key = `haravan_product_item_${index}`
-                            return <Component.ProductItem data={product} key={key} />
-                        })}
-                    </ScrollView>
+                    <FlatList
+                    data={listProduct}
+                    renderItem={({item}) =><Component.ProductItem data={item} />}
+                    keyExtractor={({id}) => id.toString()}/>
                 </View>
                 : <ActivityIndicator size="large" color="#00ff00" />
             }
@@ -86,4 +82,3 @@ export class InventoryScreen extends React.Component<IInventoryScreenProps, IInv
         );
     }
 }
-

@@ -2,15 +2,29 @@ import React from "react";
 import { View, Image, Text, TouchableOpacity, StyleSheet, ActivityIndicator } from "react-native";
 import { NavigationStackProp } from 'react-navigation-stack';
 import { IProductItem } from "../../screens/InventoryScreen";
+import * as Component from "../../components";
 
 type IProductItemProps = {
     navigation?: NavigationStackProp;
     data: IProductItem
 };
 
-export class ProductItem extends React.Component<IProductItemProps, {}> {
-
+interface IStateProductItem {
+    modalVisible: boolean
+}
+export class ProductItem extends React.Component<IProductItemProps, IStateProductItem> {
+    constructor(props) {
+        super(props)
+        this.state = {
+            modalVisible: false
+        }
+    }
+    __OnoffModal = (visible: boolean) => {
+        this.setState({ modalVisible: visible })
+    }
+    
     render() {
+        const { modalVisible } = this.state
         const { data } = this.props
         const getdate = new Date(data.last_updated)
         const date = getdate.getDate();
@@ -28,10 +42,11 @@ export class ProductItem extends React.Component<IProductItemProps, {}> {
                     <Text style={styles.item}>Ngày nhập: {date}-{month}-{year}</Text>
                     <Text style={styles.item}>Chưa phát sinh giao dịch</Text>
                     <Text style={styles.item}>{data.price}</Text>
-                    <TouchableOpacity style={styles.button}>
+                    <TouchableOpacity style={styles.button} onPress={() => this.__OnoffModal(true)}>
                         <Text style={styles.buttonLabel}>Bật khuyến mãi</Text>
                     </TouchableOpacity>
                 </View>
+                <Component.Modals modalVisible={modalVisible} OnofModal={this.__OnoffModal} />
             </View >
         );
     }
