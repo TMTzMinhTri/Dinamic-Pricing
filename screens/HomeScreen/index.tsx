@@ -26,18 +26,22 @@ export class HomeScreen extends React.Component<IHomeScreenProps, IHomeScreenSta
         this.setState({ loading: true }, () => {
             this.sendToken((value) => {
                 this.setState({ loading: false }, () => {
-                    value === true
-                        ? Alert.alert(
-                            'Cảnh báo',
-                            'Vui lòng kết nối lại',
-                            [
-                                { text: 'OK', onPress: () => this._clearToken() },
-                            ]
-                        )
-                        : null
+                    // value === true
+                    //     ? Alert.alert(
+                    //         'Cảnh báo',
+                    //         'Vui lòng kết nối lại',
+                    //         [
+                    //             { text: 'OK', onPress: () => this._clearToken() },
+                    //         ]
+                    //     )
+                    //     : null
                 })
             })
         })
+    }
+
+    private getListProductPromoting = () => {
+        const url = `http://163.47.9.196:8000/api/`
     }
     private sendToken = async (callback: Function = () => { }) => {
         try {

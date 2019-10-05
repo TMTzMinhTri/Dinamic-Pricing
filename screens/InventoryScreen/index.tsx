@@ -16,6 +16,7 @@ interface IInventoryScreenState {
 }
 export interface IProductItem {
     compare_at_price: number,
+    base_price: number,
     id: number,
     last_order: Date,
     last_updated: Date,
@@ -26,6 +27,8 @@ export interface IProductItem {
     quantity: number,
     traded_from_now: string,
     variant_title: string,
+    is_promoting: number,
+    promote_percent: number
     image: {
         src: string
     }
@@ -45,6 +48,7 @@ export class InventoryScreen extends React.Component<IInventoryScreenProps, IInv
             headerTitle: "HaraHotdeal"
         };
     }
+
     componentDidMount() {
         this.setState({ loading: true }, () => {
             this.getData((data) => {
@@ -60,7 +64,9 @@ export class InventoryScreen extends React.Component<IInventoryScreenProps, IInv
         })
         callback(rsp.data)
     }
+    private handlePromotionStatus = (value) => {
 
+    }
     __OnoffModal = (visible: boolean) => {
         this.setState({ modalVisible: visible })
     }
@@ -71,9 +77,9 @@ export class InventoryScreen extends React.Component<IInventoryScreenProps, IInv
             {loading === false
                 ? < View style={{ flexDirection: "row", alignItems: "stretch", padding: 10 }}>
                     <FlatList
-                    data={listProduct}
-                    renderItem={({item}) =><Component.ProductItem data={item} />}
-                    keyExtractor={({id}) => id.toString()}/>
+                        data={listProduct}
+                        renderItem={({ item }) => <Component.ProductItem data={item} />}
+                        keyExtractor={({ id }) => id.toString()} />
                 </View>
                 : <ActivityIndicator size="large" color="#00ff00" />
             }

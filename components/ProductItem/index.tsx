@@ -22,7 +22,11 @@ export class ProductItem extends React.Component<IProductItemProps, IStateProduc
     __OnoffModal = (visible: boolean) => {
         this.setState({ modalVisible: visible })
     }
-    
+    componentDidUpdate(pre: IProductItemProps) {
+        if (pre.data.is_promoting !== this.props.data.is_promoting){
+            this.setState({})
+        }
+    }
     render() {
         const { modalVisible } = this.state
         const { data } = this.props
@@ -42,11 +46,15 @@ export class ProductItem extends React.Component<IProductItemProps, IStateProduc
                     <Text style={styles.item}>Ngày nhập: {date}-{month}-{year}</Text>
                     <Text style={styles.item}>Chưa phát sinh giao dịch</Text>
                     <Text style={styles.item}>{data.price}</Text>
-                    <TouchableOpacity style={styles.button} onPress={() => this.__OnoffModal(true)}>
-                        <Text style={styles.buttonLabel}>Bật khuyến mãi</Text>
-                    </TouchableOpacity>
+                    {data.is_promoting === 0
+                        ? <TouchableOpacity style={styles.button} onPress={() => this.__OnoffModal(true)}>
+                            <Text style={styles.buttonLabel}>Bật khuyến mãi</Text>
+                        </TouchableOpacity>
+                        : <TouchableOpacity style={styles.button} onPress={() => this.__OnoffModal(true)}>
+                            <Text style={styles.buttonLabel}>Đã bật Khuyến mãi</Text>
+                        </TouchableOpacity>}
                 </View>
-                <Component.Modals modalVisible={modalVisible} OnofModal={this.__OnoffModal} />
+                <Component.Modals modalVisible={modalVisible} OnofModal={this.__OnoffModal} item={data} />
             </View >
         );
     }
