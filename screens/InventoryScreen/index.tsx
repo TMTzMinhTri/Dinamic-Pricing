@@ -53,10 +53,31 @@ export class InventoryScreen extends React.Component<IInventoryScreenProps, IInv
 
     componentDidMount() {
         this.setState({ loading: true }, () => {
-            this.getData((data) => {
-                this.setState({ listProduct: data, loading: false })
+            this.sendToken(() => {
+                this.getData((data) => {
+                    this.setState({ listProduct: data, loading: false })
+                })
             })
+
         })
+    }
+    private sendToken = async (callback) => {
+        try {
+            const url = "http://163.47.9.196:8000/api/updatecode"
+            const token = await AsyncStorage.getItem("login_token")
+            const code = await AsyncStorage.getItem("code")
+            const shop = await AsyncStorage.getItem("shop")
+            let rsp = await Axios.post(url, {
+                code,
+                shop_name: shop
+            }, {
+                headers: { "Authorization": token }
+            })
+            console.log(rsp.data)
+        } catch (error) {
+            console.log(error)
+        }
+        callback()
     }
     private getData = async (callback: Function) => {
         const token = await AsyncStorage.getItem("login_token")

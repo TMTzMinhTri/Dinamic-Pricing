@@ -43,8 +43,8 @@ export class RegisterScreen extends React.Component<IPropsRegisterScreen, IState
     };
   };
   private onSubmit = async () => {
-    // const { email, password, userid } = this.state
-    const email = "12312111", password = "1234", userid = "123123111"
+    const { email, password, userid } = this.state
+    // const email = "12312111", password = "1234", userid = "123123111"
     const datapost = { email, userid, password }
     try {
       let rsp = await axios.post('http://163.47.9.196:8000/api/register', datapost), { data } = rsp
@@ -109,7 +109,7 @@ export class RegisterScreen extends React.Component<IPropsRegisterScreen, IState
             />
             <TouchableOpacity
               style={styles.touchbtn}
-              onPress={() => this.props.navigation.navigate("Connect")}
+              onPress={this.onSubmit}
             >
               <Text>Đăng ký</Text>
             </TouchableOpacity>

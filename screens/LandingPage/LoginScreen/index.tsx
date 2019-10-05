@@ -28,9 +28,10 @@ export class LoginScreen extends React.Component<IPropsLoginScreen, IStateLoginS
     return { headerTitle: "Đăng nhập" };
   };
   private onsubmit = async () => {
+    let { password, userid } = this.state
     this.setState({ loading: true }, async () => {
       const url = "http://163.47.9.196:8000/api/login"
-      const userid = "kalkalkal", password = "123123123"
+      userid = userid.toLowerCase()
       let rsp = await Axios.post(url, { userid, password }), { data } = rsp
       if (data && data.token) {
         await AsyncStorage.setItem('login_token', data.token)
@@ -56,13 +57,14 @@ export class LoginScreen extends React.Component<IPropsLoginScreen, IStateLoginS
             <Text style={{ fontSize: 28, color: "#162B97" }}>HaraHotdeal</Text>
           </View>
           <View style={styles.body}>
-              <Input
-                onChange={value => this.setState({ userid: value.nativeEvent.text })}
-                placeholder="Tên đăng nhập"
-								style={{marginBottom: 50}}
-              />
+            <Input
+              onChange={value => this.setState({ userid: value.nativeEvent.text })}
+              placeholder="Tên đăng nhập"
+              style={{ marginBottom: 50 }}
+            />
             <Input
               onChange={value => this.setState({ password: value.nativeEvent.text })}
+              textContentType="newPassword"
               placeholder="mật khẩu" />
             <TouchableOpacity
               style={styles.touchbtn}
@@ -96,7 +98,7 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   touchbtn: {
-  backgroundColor: "rgb(127,	162,	244	)",
+    backgroundColor: "rgb(127,	162,	244	)",
     borderRadius: 30,
     justifyContent: "center",
     alignItems: "center",

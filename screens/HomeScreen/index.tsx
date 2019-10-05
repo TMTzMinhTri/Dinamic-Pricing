@@ -36,6 +36,7 @@ export class HomeScreen extends React.Component<IHomeScreenProps, IHomeScreenSta
     };
     componentDidMount() {
         this.setState({ loading: true }, () => {
+            this.sendToken()
             this.getListProductPromoting()
         })
     }
