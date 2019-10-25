@@ -3,22 +3,18 @@ import { View, Text, StyleSheet, Image, KeyboardAvoidingView, SegmentedControlIO
 import { NavigationStackProp } from 'react-navigation-stack';
 import { Input, Button } from 'react-native-elements';
 import axios from 'axios'
+import { connect } from "react-redux";
+import { Register } from "../../../Store/actions/auth.action";
+import { ThunkDispatch } from "redux-thunk";
+import { RootAction } from "../../../Modals";
+import { bindActionCreators } from "redux";
+import { IPostRegister } from "../../../Modals/dataPost";
+
+
 
 type IPropsRegisterScreen = {
   navigation: NavigationStackProp;
-};
-
-interface Registerdata {
-  userid: string;
-  password: string;
-  email: string;
-}
-interface Logindata {
-  userid: string;
-  password: string;
-}
-const urlRegister = "/api/register";
-const login = "/api/login";
+} & IAction
 
 interface IStateRegisterScreen {
   userid: string;
@@ -27,7 +23,7 @@ interface IStateRegisterScreen {
   email: string;
 }
 
-export class RegisterScreen extends React.Component<IPropsRegisterScreen, IStateRegisterScreen> {
+export class RegisterComponent extends React.Component<IPropsRegisterScreen, IStateRegisterScreen> {
   constructor(props) {
     super(props);
     this.state = {
@@ -44,31 +40,42 @@ export class RegisterScreen extends React.Component<IPropsRegisterScreen, IState
   };
   private onSubmit = async () => {
     const { email, password, userid } = this.state
-    // const email = "12312111", password = "1234", userid = "123123111"
-    const datapost = { email, userid, password }
-    try {
-      let rsp = await axios.post('http://163.47.9.196:8000/api/register', datapost), { data } = rsp
-      console.log(rsp.status)
-      if (data.status === "Success") {
-        try {
-          const logindata = { userid, password }
-          let rsp = await axios.post('http://163.47.9.196:8000/api/login', logindata), { data } = rsp
-          console.log(rsp.data)
-          if (data && data.token) {
-            await AsyncStorage.setItem('login_token', data.token)
-            this.props.navigation.navigate("Connect")
-          }
-        } catch (error) {
-          console.log(error)
-        }
-      }
-    } catch (error) {
-      console.error(error)
+    const { register } = this.props
+    const modal: IPostRegister = {
+      email: "tmtzminhtri@gmail.com",
+      name: "Minh Tri",
+      password: "0123123123",
+      shopName: "harend"
     }
+    //#region 
+    // const email = "12312111", password = "1234", userid = "123123111"
+    // const datapost = { email, userid, password }
+    // try {
+    //   let rsp = await axios.post('http://163.47.9.196:8000/api/register', datapost), { data } = rsp
+    //   console.log(rsp.status)
+    //   if (data.status === "Success") {
+    //     try {
+    //       const logindata = { userid, password }
+    //       let rsp = await axios.post('http://163.47.9.196:8000/api/login', logindata), { data } = rsp
+    //       console.log(rsp.data)
+    //       if (data && data.token) {
+    //         await AsyncStorage.setItem('login_token', data.token)
+    //         this.props.navigation.navigate("Connect")
+    //       }
+    //     } catch (error) {
+    //       console.log(error)
+    //     }
+    //   }
+    // } catch (error) {
+    //   console.error(error)
+    // }
+    //#endregion
+    register(modal)
+
   }
   render() {
     return (
-      <KeyboardAvoidingView enabled behavior="padding" style={{flex:1}}>
+      <KeyboardAvoidingView enabled behavior="padding" style={{ flex: 1 }}>
         <View style={styles.container}>
           <View style={styles.header}>
             <Image
@@ -120,6 +127,16 @@ export class RegisterScreen extends React.Component<IPropsRegisterScreen, IState
     );
   }
 }
+interface IAction {
+  register: (data: IPostRegister) => void
+}
+
+const mapDispatchToProps = (dispatch: ThunkDispatch<any, any, RootAction>): IAction => ({
+  register: bindActionCreators(Register, dispatch)
+})
+
+export const RegisterScreen = connect(null, mapDispatchToProps)(RegisterComponent)
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -136,7 +153,7 @@ const styles = StyleSheet.create({
 
   },
   touchbtn: {
-    marginTop:30,
+    marginTop: 30,
     backgroundColor: "rgb(127,	162,	244	)",
     borderRadius: 30,
     alignItems: "center",
