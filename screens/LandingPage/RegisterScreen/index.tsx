@@ -1,20 +1,20 @@
 import React from "react";
-import { View, Text, StyleSheet, Image, KeyboardAvoidingView, SegmentedControlIOSComponent, AsyncStorage, TouchableOpacity } from "react-native";
+import { View, Text, StyleSheet, Image, KeyboardAvoidingView, SegmentedControlIOSComponent, AsyncStorage, TouchableOpacity, Alert } from "react-native";
 import { NavigationStackProp } from 'react-navigation-stack';
 import { Input, Button } from 'react-native-elements';
-import axios from 'axios'
 import { connect } from "react-redux";
-import { Register } from "../../../Store/actions/auth.action";
+import { Register, reset } from "../../../Store/actions/auth.action";
 import { ThunkDispatch } from "redux-thunk";
 import { RootAction } from "../../../Modals";
 import { bindActionCreators } from "redux";
 import { IPostRegister } from "../../../Modals/dataPost";
+import { RootState } from "../../../Store";
 
 
 
 type IPropsRegisterScreen = {
   navigation: NavigationStackProp;
-} & IAction
+} & IAction & IState
 
 interface IStateRegisterScreen {
   userid: string;
@@ -40,9 +40,10 @@ export class RegisterComponent extends React.Component<IPropsRegisterScreen, ISt
   };
   private onSubmit = async () => {
     const { email, password, userid } = this.state
-    const { register } = this.props
+    const { register, errorMessage } = this.props
+    console.log(errorMessage)
     const modal: IPostRegister = {
-      email: "tmtzminhtri@gmail.com",
+      email: "tmtzminhtri1@gmail.com",
       name: "Minh Tri",
       password: "0123123123",
       shopName: "harend"
@@ -70,11 +71,17 @@ export class RegisterComponent extends React.Component<IPropsRegisterScreen, ISt
     //   console.error(error)
     // }
     //#endregion
-    register(modal)
+    register(modal, () => {
+
+    })
 
   }
   render() {
-    return (
+    const { errorMessage, reset } = this.props
+    return (<React.Fragment>
+      {errorMessage && Alert.alert("Error", errorMessage, [
+        { text: 'Cancel', style: 'cancel', onPress: () => reset()},
+      ])}
       <KeyboardAvoidingView enabled behavior="padding" style={{ flex: 1 }}>
         <View style={styles.container}>
           <View style={styles.header}>
@@ -123,19 +130,33 @@ export class RegisterComponent extends React.Component<IPropsRegisterScreen, ISt
           </View>
         </View>
       </KeyboardAvoidingView>
-
+    </React.Fragment>
     );
   }
 }
-interface IAction {
-  register: (data: IPostRegister) => void
+
+interface IState {
+  errorMessage: string
 }
 
-const mapDispatchToProps = (dispatch: ThunkDispatch<any, any, RootAction>): IAction => ({
-  register: bindActionCreators(Register, dispatch)
+
+interface IAction {
+  register: (data: IPostRegister, callback: Function) => void,
+  reset: VoidFunction
+}
+
+
+const mapStateToProps = (state: RootState): IState => ({
+  errorMessage: state.userinfo.errormessage
 })
 
-export const RegisterScreen = connect(null, mapDispatchToProps)(RegisterComponent)
+
+const mapDispatchToProps = (dispatch: ThunkDispatch<any, any, RootAction>): IAction => ({
+  register: bindActionCreators(Register, dispatch),
+  reset: bindActionCreators(reset, dispatch)
+})
+
+export const RegisterScreen = connect(mapStateToProps, mapDispatchToProps)(RegisterComponent)
 
 const styles = StyleSheet.create({
   container: {

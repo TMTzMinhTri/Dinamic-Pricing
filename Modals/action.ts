@@ -1,8 +1,16 @@
-export const REGISTER = "REGISTER"
+export const REGISTER_ERROR = "REGISTER_ERROR"
+export const RESETSTATE = "RESETSTATE"
 
 
-interface IActionRegister {
-    type: typeof REGISTER
+export interface IActionRegister {
+    type: typeof REGISTER_ERROR,
+    message: string
+}
+export interface ResetState {
+    type: typeof RESETSTATE
 }
 
-export type AuthActionType = IActionRegister
+export interface DispatchFunction {
+    
+}
+export type AuthActionType = IActionRegister | ResetState

@@ -1,6 +1,6 @@
-export { IconAntDesign, IconMaterialIcons, IconIonicons } from './TabBarIcon'
+// export { IconAntDesign, IconMaterialIcons, IconIonicons } from './TabBarIcon'
 
-export { Modal } from './Modal'
+// export { Modal } from './Modal'
 
-export { Modals } from './Popup'
-export { ProductItem } from './ProductItem'
+// export { Modals } from './Popup'
+// export { ProductItem } from './ProductItem'

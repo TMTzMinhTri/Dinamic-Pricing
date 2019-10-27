@@ -1,7 +1,7 @@
 import React from "react";
-import { createStackNavigator } from "react-navigation";
+import { createStackNavigator } from "react-navigation-stack";
 import { IconIonicons, IconMaterialIcons, IconAntDesign } from '../components/TabBarIcon'
-import * as Components from "../components";
+// import * as Components from "../components";
 
 import { HomeScreen } from "../screens/HomeScreen";
 
@@ -59,8 +59,7 @@ const InventoryStack = createStackNavigator(
     }
 );
 export const RootInventoryStack = createStackNavigator({
-    Home: InventoryStack,
-    Modal: Components.Modal
+    Home: InventoryStack
 }, {
     mode: 'modal',
     headerMode: 'none',

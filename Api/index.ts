@@ -1,6 +1,3 @@
-
-
-
 export interface IResponse<T> extends IResponseResult {
     data: T
 }
@@ -32,7 +29,8 @@ export const Api = {
         }) as Promise<IResponse<T>>
     },
     POST<T>(path: string, body: object) {
-        const url = `this.url${path}`
+        const url = `${this.url}${path}`
+        console.log(url)
         return new Promise((resolve, reject) => {
             fetch(url, {
                 method: "POST",

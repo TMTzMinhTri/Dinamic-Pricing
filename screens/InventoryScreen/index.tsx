@@ -115,7 +115,7 @@ export class InventoryScreen extends React.Component<IInventoryScreenProps, IInv
         const { listProduct, loading, refreshing } = this.state
         return (<View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
 
-            {loading === false
+            {/* {loading === false
                 ? < View style={{ flexDirection: "row", alignItems: "stretch", padding: 10 }}>
                     <FlatList
                         data={listProduct}
@@ -126,8 +126,8 @@ export class InventoryScreen extends React.Component<IInventoryScreenProps, IInv
                             onChange={this.handlePromotionStatus}
                             screen="inventory" />}
                         keyExtractor={({ id }) => id.toString()} />
-                </View>
-                : <ActivityIndicator size="large" color="#00ff00" />
+                </View> */}
+                <ActivityIndicator size="large" color="#00ff00" />
             }
         </View>
 

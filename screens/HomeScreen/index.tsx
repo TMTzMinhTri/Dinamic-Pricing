@@ -93,23 +93,24 @@ export class HomeScreen extends React.Component<IHomeScreenProps, IHomeScreenSta
     }
     render() {
         const { loading, ListProduct, refreshing } = this.state
-        return loading === false
-            ? <View style={{ flex: 1 }} >
-                {ListProduct.length > 0
-                    ? <FlatList
-                        data={ListProduct}
-                        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={this.onRefresh} />}
-                        renderItem={({ item }) => <Component.ProductItem data={item} onChange={this.handlePromotionStatus} screen="home" onTouchImage={this.onTouchImage} />}
-                        keyExtractor={({ id }) => `product_promoting_${id}`}
-                    />
-                    : <View style={{ justifyContent: "center", alignItems: "center", flex: 1 }}>
-                        <Text style={{ fontSize: 20 }}>Chưa có sản phẩm đang khuyến mãi</Text>
-                    </View>
-                }
-            </View >
-            : <View style={[styles.container, styles.horizontal]}>
-                <ActivityIndicator size="large" color="#00ff00" />
-            </View>
+        return (
+            // loading === false
+            //     ? <View style={{ flex: 1 }} >
+            //         {ListProduct.length > 0
+            //             ? <FlatList
+            //                 data={ListProduct}
+            //                 refreshControl={<RefreshControl refreshing={refreshing} onRefresh={this.onRefresh} />}
+            //                 renderItem={({ item }) => <Component.ProductItem data={item} onChange={this.handlePromotionStatus} screen="home" onTouchImage={this.onTouchImage} />}
+            //                 keyExtractor={({ id }) => `product_promoting_${id}`}
+            //             />
+            //             : <View style={{ justifyContent: "center", alignItems: "center", flex: 1 }}>
+            //                 <Text style={{ fontSize: 20 }}>Chưa có sản phẩm đang khuyến mãi</Text>
+            //             </View>
+            //         }
+            //     </View >
+                 <View style={[styles.container, styles.horizontal]}>
+                    <ActivityIndicator size="large" color="#00ff00" />
+                </View>)
     }
 }
 

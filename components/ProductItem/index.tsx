@@ -2,7 +2,7 @@ import React from "react";
 import { View, Image, Text, TouchableOpacity, StyleSheet, ActivityIndicator } from "react-native";
 import { NavigationStackProp } from 'react-navigation-stack';
 import { IProductItem } from "../../screens/InventoryScreen";
-import * as Component from "../../components";
+import { Modals } from "../../components/Popup";
 
 type IProductItemProps = {
     navigation?: NavigationStackProp;
@@ -62,7 +62,7 @@ export class ProductItem extends React.Component<IProductItemProps, IStateProduc
                                 </View>
                             </View>}
                 </View>
-                <Component.Modals modalVisible={modalVisible} OnofModal={this.__OnoffModal} item={data} onchange={onChange} />
+                <Modals modalVisible={modalVisible} OnofModal={this.__OnoffModal} item={data} onchange={onChange} />
             </View >
         );
     }

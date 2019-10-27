@@ -1,4 +1,4 @@
-import { createBottomTabNavigator } from "react-navigation";
+import { createBottomTabNavigator } from 'react-navigation-tabs';
 import { HomeStack, UserStack, RootInventoryStack } from "./stack_navigation";
 
 const tabNavigator = createBottomTabNavigator({

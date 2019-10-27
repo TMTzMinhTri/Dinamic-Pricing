@@ -1,13 +1,14 @@
 import React from "react";
 import { View, StyleSheet, AsyncStorage, ActivityIndicator, StatusBar } from "react-native";
-import { NavigationScreenProps } from "react-navigation";
+import { NavigationStackProp } from 'react-navigation-stack';
 
 
-interface IHomeScreenProps extends NavigationScreenProps {
 
-}
+type IPropsConnectScreen = {
+    navigation: NavigationStackProp;
+};
 
-export class AuthLoadingScreen extends React.Component<IHomeScreenProps, {}> {
+export class AuthLoadingScreen extends React.Component<IPropsConnectScreen, {}> {
     constructor(props) {
         super(props)
         this._bootstrapAsync()
