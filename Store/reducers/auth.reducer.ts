@@ -1,7 +1,6 @@
 import { RootAction } from "../../Modals"
 import { REGISTER_ERROR, RESETSTATE, SIGNIN_SUCCESS } from "../../Modals/action"
 import { AsyncStorage } from "react-native";
-import { string } from "prop-types";
 
 interface IauthReducer {
     errormessage: string,

@@ -3,12 +3,13 @@ import { View, Text, StyleSheet, Image, KeyboardAvoidingView, SegmentedControlIO
 import { NavigationStackProp } from 'react-navigation-stack';
 import { Input, Button } from 'react-native-elements';
 import { connect } from "react-redux";
-import { Register, reset } from "../../../Store/actions/auth.action";
+import { Register, reset, GetAccessToken } from "../../../Store/actions/auth.action";
 import { ThunkDispatch } from "redux-thunk";
 import { RootAction } from "../../../Modals";
 import { bindActionCreators } from "redux";
 import { IPostRegister } from "../../../Modals/dataPost";
 import { RootState } from "../../../Store";
+import { AuthSession } from "expo";
 
 
 
@@ -42,39 +43,32 @@ export class RegisterComponent extends React.Component<IPropsRegisterScreen, ISt
   };
   private onSubmit = async () => {
     const { email, password, userid } = this.state
-    const { register } = this.props
+    const { register, getAccessToken } = this.props
     const modal: IPostRegister = {
-      email: "tmtzminhtri7@gmail.com",
+      email: "tmtzminhtri3@gmail.com",
       name: "Minh Tri",
       password: "0123123123",
       shopName: "harend"
     }
-    //#region 
-    // const email = "12312111", password = "1234", userid = "123123111"
-    // const datapost = { email, userid, password }
-    // try {
-    //   let rsp = await axios.post('http://163.47.9.196:8000/api/register', datapost), { data } = rsp
-    //   console.log(rsp.status)
-    //   if (data.status === "Success") {
-    //     try {
-    //       const logindata = { userid, password }
-    //       let rsp = await axios.post('http://163.47.9.196:8000/api/login', logindata), { data } = rsp
-    //       console.log(rsp.data)
-    //       if (data && data.token) {
-    //         await AsyncStorage.setItem('login_token', data.token)
-    //         this.props.navigation.navigate("Connect")
-    //       }
-    //     } catch (error) {
-    //       console.log(error)
-    //     }
-    //   }
-    // } catch (error) {
-    //   console.error(error)
-    // }
-    //#endregion
     this.setState({ loading: true }, () => {
-      register(modal, () => {
-        this.setState({ loading: false })
+      register(modal, (value) => {
+        this.setState({ loading: false }, async () => {
+          const { status, apiKey, shopName } = value
+          if (status === true) {
+            const redirectUrl = AuthSession.getRedirectUrl();
+            const result: any = await AuthSession.startAsync({
+              authUrl:
+                `https://${shopName}.myharavan.com/admin/api/auth/?api_key=${apiKey}&redirect_uri=${encodeURIComponent(redirectUrl)}`,
+            });
+            console.log(result);
+            
+            if (result.type == "success") {
+              setTimeout(() => {
+                getAccessToken(result.params.code)
+              }, 300);
+            }
+          }
+        })
       })
     })
   }
@@ -142,25 +136,29 @@ export class RegisterComponent extends React.Component<IPropsRegisterScreen, ISt
 
 interface IState {
   errorMessage: string,
-  loading: boolean
+  shopName: string,
+  apiKey: string
 }
 
 
 interface IAction {
   register: (data: IPostRegister, callback: Function) => void,
-  reset: VoidFunction
+  reset: VoidFunction,
+  getAccessToken: (code: string) => void
 }
 
 
 const mapStateToProps = (state: RootState): IState => ({
   errorMessage: state.userinfo.errormessage,
-  loading: state.userinfo.loading
+  shopName: state.userinfo.shopName,
+  apiKey: state.userinfo.apiKey
 })
 
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<any, any, RootAction>): IAction => ({
   register: bindActionCreators(Register, dispatch),
-  reset: bindActionCreators(reset, dispatch)
+  reset: bindActionCreators(reset, dispatch),
+  getAccessToken: bindActionCreators(GetAccessToken, dispatch)
 })
 
 export const RegisterScreen = connect(mapStateToProps, mapDispatchToProps)(RegisterComponent)

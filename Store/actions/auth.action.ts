@@ -1,7 +1,5 @@
 import { Dispatch } from "redux"
-import { AsyncStorage } from "react-native";
-
-import { register, signin } from '../../Api/Repository'
+import { register, signin, getAccessToken } from '../../Api/Repository'
 import { IPostRegister, IPostSignIn } from "../../Modals/dataPost";
 import { REGISTER_ERROR, RESETSTATE, SIGNIN_SUCCESS } from "../../Modals/action";
 import { RootAction } from "../../Modals";
@@ -19,12 +17,12 @@ export const reset = () => {
 export const Register = (dataPost: IPostRegister, callback: Function) => {
     return async (dispatch: Dispatch<RootAction>) => {
         let data = await register(dataPost)
-        console.log(data)
         if (data.success === false) {
             dispatch({
                 type: REGISTER_ERROR,
                 message: data.error.message
             })
+            callback({ status: false })
         }
         else {
             const dataSignin: IPostSignIn = {
@@ -34,12 +32,22 @@ export const Register = (dataPost: IPostRegister, callback: Function) => {
             try {
                 let rsp = await signin(dataSignin)
                 dispatch({ type: SIGNIN_SUCCESS, payload: rsp.data })
+                callback({
+                    status: true,
+                    apiKey: rsp.data.apiKey,
+                    shopName: rsp.data.shopName
+                })
             } catch (error) {
                 console.log(error.message)
             }
 
         }
-        callback()
     }
 }
 
+export const GetAccessToken = (code: string) => {
+    return async (dispatch: Dispatch<RootAction>) => {
+        let rsp = await getAccessToken(code)
+        console.log(rsp)
+    }
+}

@@ -14,3 +14,8 @@ export const signin = (body: IPostSignIn) => {
     const path = `/api/user/signin`
     return Api.POST<IResponeSignIn>(path, body)
 }
+
+export const getAccessToken = (code: string) => {
+    const path = `/auth?code=${code}`
+    return Api.Get<IResponseStatus>(path)
+}

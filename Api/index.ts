@@ -1,3 +1,5 @@
+import { AsyncStorage } from "react-native"
+
 export interface IResponse<T> extends IResponseResult {
     data: T
 }
@@ -13,15 +15,17 @@ interface IResponseError {
 
 export const Api = {
     url: "http://localhost:5000",
-    Get<T>(path: string) {
-        const url = `this.url${path}`
+    async Get<T>(path: string) {
+        const url = `${this.url}${path}`
+        const login_token = await AsyncStorage.getItem("login_token")
         return new Promise((resolve, reject) => {
             fetch(url, {
                 method: "GET",
                 credentials: 'include',
                 headers: {
                     'Accept': 'application/json',
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    "login_token": login_token ? login_token : null
                 }
             }).then(result => {
                 resolve(result.json())
@@ -38,7 +42,7 @@ export const Api = {
                 body: JSON.stringify(body),
                 headers: {
                     'Accept': 'application/json',
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
                 }
             }).then(result => {
                 resolve(result.json())
