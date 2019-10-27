@@ -1,7 +1,7 @@
 import React from "react";
 import { View, Text, Button, TouchableOpacity, AsyncStorage, Alert, ScrollView, ActivityIndicator, FlatList, RefreshControl } from "react-native";
 import { NavigationStackProp } from 'react-navigation-stack';
-import * as Component from "../../components";
+// import * as Component from "../../components";
 import Axios from "axios";
 
 

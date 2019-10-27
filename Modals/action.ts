@@ -1,5 +1,8 @@
+import { IResponeSignIn } from "./response"
+
 export const REGISTER_ERROR = "REGISTER_ERROR"
 export const RESETSTATE = "RESETSTATE"
+export const SIGNIN_SUCCESS = "SIGNIN_SUCCESS"
 
 
 export interface IActionRegister {
@@ -9,8 +12,11 @@ export interface IActionRegister {
 export interface ResetState {
     type: typeof RESETSTATE
 }
-
-export interface DispatchFunction {
-    
+export interface IActionSigninSuccess {
+    type: typeof SIGNIN_SUCCESS,
+    payload: IResponeSignIn
 }
-export type AuthActionType = IActionRegister | ResetState
+export interface DispatchFunction {
+
+}
+export type AuthActionType = IActionRegister | ResetState | IActionSigninSuccess

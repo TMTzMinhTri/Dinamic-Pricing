@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, StyleSheet, Image, KeyboardAvoidingView, SegmentedControlIOSComponent, AsyncStorage, TouchableOpacity, Alert } from "react-native";
+import { View, Text, StyleSheet, Image, KeyboardAvoidingView, SegmentedControlIOSComponent, AsyncStorage, TouchableOpacity, Alert, ActivityIndicator } from "react-native";
 import { NavigationStackProp } from 'react-navigation-stack';
 import { Input, Button } from 'react-native-elements';
 import { connect } from "react-redux";
@@ -21,6 +21,7 @@ interface IStateRegisterScreen {
   password: string;
   confirmPassword: string;
   email: string;
+  loading: boolean
 }
 
 export class RegisterComponent extends React.Component<IPropsRegisterScreen, IStateRegisterScreen> {
@@ -30,7 +31,8 @@ export class RegisterComponent extends React.Component<IPropsRegisterScreen, ISt
       userid: "",
       password: "",
       confirmPassword: "",
-      email: ""
+      email: "",
+      loading: false
     };
   }
   static navigationOptions = ({ navigation }) => {
@@ -40,10 +42,9 @@ export class RegisterComponent extends React.Component<IPropsRegisterScreen, ISt
   };
   private onSubmit = async () => {
     const { email, password, userid } = this.state
-    const { register, errorMessage } = this.props
-    console.log(errorMessage)
+    const { register } = this.props
     const modal: IPostRegister = {
-      email: "tmtzminhtri1@gmail.com",
+      email: "tmtzminhtri7@gmail.com",
       name: "Minh Tri",
       password: "0123123123",
       shopName: "harend"
@@ -71,72 +72,77 @@ export class RegisterComponent extends React.Component<IPropsRegisterScreen, ISt
     //   console.error(error)
     // }
     //#endregion
-    register(modal, () => {
-
+    this.setState({ loading: true }, () => {
+      register(modal, () => {
+        this.setState({ loading: false })
+      })
     })
-
   }
   render() {
-    const { errorMessage, reset } = this.props
-    return (<React.Fragment>
-      {errorMessage && Alert.alert("Error", errorMessage, [
-        { text: 'Cancel', style: 'cancel', onPress: () => reset()},
-      ])}
-      <KeyboardAvoidingView enabled behavior="padding" style={{ flex: 1 }}>
-        <View style={styles.container}>
-          <View style={styles.header}>
-            <Image
-              style={{
-                width: 90,
-                height: 90
-              }}
-              resizeMethod="resize"
-              resizeMode="contain"
-              source={require("../../../assets/images.png")}
-            />
-            <Text style={{ fontSize: 20, color: "#162B97" }}>HaraHotdeal</Text>
+    const { errorMessage, reset, } = this.props
+    const { loading } = this.state
+    return (loading === false
+      ? < React.Fragment >
+        {errorMessage && Alert.alert("Error", errorMessage, [
+          { text: 'Cancel', style: 'cancel', onPress: () => reset() },
+        ])}
+        <KeyboardAvoidingView enabled behavior="padding" style={{ flex: 1 }}>
+          <View style={styles.container}>
+            <View style={styles.header}>
+              <Image
+                style={{
+                  width: 90,
+                  height: 90
+                }}
+                resizeMethod="resize"
+                resizeMode="contain"
+                source={require("../../../assets/images.png")}
+              />
+              <Text style={{ fontSize: 20, color: "#162B97" }}>HaraHotdeal</Text>
+            </View>
+            <View style={styles.body}>
+              <Input
+                onChange={value =>
+                  this.setState({ userid: value.nativeEvent.text })
+                }
+                placeholder="Tên đăng nhập"
+              />
+              <Input
+                onChange={value =>
+                  this.setState({ password: value.nativeEvent.text })
+                }
+                placeholder="mật khẩu"
+              />
+              <Input
+                onChange={value =>
+                  this.setState({ confirmPassword: value.nativeEvent.text })
+                }
+                placeholder="xác nhận mật khẩu"
+              />
+              <Input
+                onChange={value =>
+                  this.setState({ email: value.nativeEvent.text })
+                }
+                placeholder="email"
+              />
+              <TouchableOpacity
+                style={styles.touchbtn}
+                onPress={this.onSubmit}
+              >
+                <Text>Đăng ký</Text>
+              </TouchableOpacity>
+            </View>
           </View>
-          <View style={styles.body}>
-            <Input
-              onChange={value =>
-                this.setState({ userid: value.nativeEvent.text })
-              }
-              placeholder="Tên đăng nhập"
-            />
-            <Input
-              onChange={value =>
-                this.setState({ password: value.nativeEvent.text })
-              }
-              placeholder="mật khẩu"
-            />
-            <Input
-              onChange={value =>
-                this.setState({ confirmPassword: value.nativeEvent.text })
-              }
-              placeholder="xác nhận mật khẩu"
-            />
-            <Input
-              onChange={value =>
-                this.setState({ email: value.nativeEvent.text })
-              }
-              placeholder="email"
-            />
-            <TouchableOpacity
-              style={styles.touchbtn}
-              onPress={this.onSubmit}
-            >
-              <Text>Đăng ký</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </KeyboardAvoidingView>
-    </React.Fragment>
+        </KeyboardAvoidingView>
+      </React.Fragment >
+      : <ActivityIndicator size="large" color="#00ff00" />
     );
   }
 }
 
 interface IState {
-  errorMessage: string
+  errorMessage: string,
+  loading: boolean
 }
 
 
@@ -147,7 +153,8 @@ interface IAction {
 
 
 const mapStateToProps = (state: RootState): IState => ({
-  errorMessage: state.userinfo.errormessage
+  errorMessage: state.userinfo.errormessage,
+  loading: state.userinfo.loading
 })
 
 

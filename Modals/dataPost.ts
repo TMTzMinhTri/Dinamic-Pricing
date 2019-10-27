@@ -4,3 +4,7 @@ export interface IPostRegister {
     password: string,
     shopName: string
 }
+export interface IPostSignIn {
+    email: string,
+    password: string
+}
