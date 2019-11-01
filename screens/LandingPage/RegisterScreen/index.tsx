@@ -10,7 +10,7 @@ import { bindActionCreators } from "redux";
 import { IPostRegister } from "../../../Modals/dataPost";
 import { RootState } from "../../../Store";
 import { AuthSession } from "expo";
-
+import * as LocalAuthentication from 'expo-local-authentication'
 
 
 type IPropsRegisterScreen = {
@@ -60,17 +60,18 @@ export class RegisterComponent extends React.Component<IPropsRegisterScreen, ISt
               authUrl:
                 `https://${shopName}.myharavan.com/admin/api/auth/?api_key=${apiKey}&redirect_uri=${encodeURIComponent(redirectUrl)}`,
             });
-            console.log(result);
-            
             if (result.type == "success") {
-              setTimeout(() => {
-                getAccessToken(result.params.code)
-              }, 300);
+              getAccessToken(result.params.code)
             }
           }
         })
       })
     })
+    // console.log('aaa')
+    // LocalAuthentication.authenticateAsync({
+    //   promptMessage: "TouchID",
+    //   fallbackLabel: "Passcode"
+    // }).then(value => console.log(value))
   }
   render() {
     const { errorMessage, reset, } = this.props
@@ -139,8 +140,6 @@ interface IState {
   shopName: string,
   apiKey: string
 }
-
-
 interface IAction {
   register: (data: IPostRegister, callback: Function) => void,
   reset: VoidFunction,

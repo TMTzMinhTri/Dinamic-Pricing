@@ -1,13 +1,20 @@
 import React from "react";
-import { View, Text, StyleSheet, Image, KeyboardAvoidingView, AsyncStorage, TouchableOpacity, ActivityIndicator } from "react-native";
+import { View, Text, StyleSheet, Image, KeyboardAvoidingView, AsyncStorage, TouchableOpacity, ActivityIndicator, Alert } from "react-native";
 import { NavigationStackProp } from 'react-navigation-stack';
 import { Input, Button } from 'react-native-elements';
-import Axios from "axios";
+import { connect } from "react-redux";
+import { ThunkDispatch } from "redux-thunk";
+import { RootAction } from "../../../Modals";
+import { RootState } from "../../../Store";
+import { SignIn, reset } from "../../../Store/actions/auth.action";
+import { IPostSignIn } from "../../../Modals/dataPost";
+import { bindActionCreators } from "redux";
+import { IResponeSignIn } from "../../../Modals/response";
 
 
 type IPropsLoginScreen = {
   navigation: NavigationStackProp;
-};
+} & IAction & IState
 
 interface IStateLoginScreen {
   userid: string;
@@ -15,7 +22,7 @@ interface IStateLoginScreen {
   loading: boolean
 }
 
-export class LoginScreen extends React.Component<IPropsLoginScreen, IStateLoginScreen> {
+class Login extends React.Component<IPropsLoginScreen, IStateLoginScreen> {
   constructor(props) {
     super(props);
     this.state = {
@@ -29,22 +36,40 @@ export class LoginScreen extends React.Component<IPropsLoginScreen, IStateLoginS
   };
   private onsubmit = async () => {
     let { password, userid } = this.state
-    this.setState({ loading: true }, async () => {
-      const url = "http://163.47.9.196:8000/api/login"
-      userid = userid.toLowerCase()
-      let rsp = await Axios.post(url, { userid, password }), { data } = rsp
-      if (data && data.token) {
-        await AsyncStorage.setItem('login_token', data.token)
-        this.setState({ loading: false }, () => {
-          this.props.navigation.push("Connect")
-        })
+    const { SignIn } = this.props
+    //#region 
+    // this.setState({ loading: true }, async () => {
+    //   const url = "http://163.47.9.196:8000/api/login"
+    //   userid = userid.toLowerCase()
+    //   let rsp = await Axios.post(url, { userid, password }), { data } = rsp
+    //   if (data && data.token) {
+    //     await AsyncStorage.setItem('login_token', data.token)
+    //     this.setState({ loading: false }, () => {
+    //       this.props.navigation.push("Connect")
+    //     })
+    //   }
+    // })
+    //#endregion
+    const modal = {
+      email: "tmtzminhtri3@gmail.com",
+      password: "0123123123"
+    }
+    SignIn(modal, (data: IResponeSignIn) => {
+      if (data) {
+        console.log('aaa')
+        this.props.navigation.navigate("Main")
       }
     })
+
   }
 
   render() {
     const { loading } = this.state
-    return (
+    const { errorMessage, reset } = this.props
+    return (<React.Fragment>
+      {errorMessage && Alert.alert("Error", errorMessage, [
+        { text: 'Cancel', style: 'cancel', onPress: () => reset() },
+      ])}
       <KeyboardAvoidingView enabled behavior="padding" style={{ flex: 1 }}>
         <View style={styles.container}>
           <View style={styles.header}>
@@ -74,10 +99,35 @@ export class LoginScreen extends React.Component<IPropsLoginScreen, IStateLoginS
           </View>
         </View>
       </KeyboardAvoidingView>
-
+    </React.Fragment>
     );
   }
 }
+interface IState {
+  errorMessage: string,
+}
+interface IAction {
+  SignIn: (data: IPostSignIn, callback: Function) => void,
+  reset: VoidFunction,
+
+}
+
+
+const mapStateToProps = (state: RootState): IState => ({
+  errorMessage: state.userinfo.errormessage
+})
+
+
+const mapDispatchToProps = (dispatch: ThunkDispatch<any, any, RootAction>): IAction => ({
+  SignIn: bindActionCreators(SignIn, dispatch),
+  reset: bindActionCreators(reset, dispatch)
+})
+
+
+export const LoginScreen = connect(mapStateToProps, mapDispatchToProps)(Login)
+
+
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,

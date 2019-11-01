@@ -113,24 +113,8 @@ export class InventoryScreen extends React.Component<IInventoryScreenProps, IInv
     render() {
         console.log(this.state)
         const { listProduct, loading, refreshing } = this.state
-        return (<View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-
-            {/* {loading === false
-                ? < View style={{ flexDirection: "row", alignItems: "stretch", padding: 10 }}>
-                    <FlatList
-                        data={listProduct}
-                        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={this.onRefresh} />}
-                        renderItem={({ item }) => <Component.ProductItem
-                            data={item}
-                            onTouchImage={this.onTouchImage}
-                            onChange={this.handlePromotionStatus}
-                            screen="inventory" />}
-                        keyExtractor={({ id }) => id.toString()} />
-                </View> */}
-                <ActivityIndicator size="large" color="#00ff00" />
-            }
-        </View>
-
-        );
+        return loading === true
+            ? <ActivityIndicator size="large" color="#00ff00" />
+            : <Text>Test</Text>
     }
 }

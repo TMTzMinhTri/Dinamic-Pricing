@@ -8,6 +8,7 @@ import { RootAction } from "../../Modals";
 //     type: RESETSTATE
 // })
 
+
 export const reset = () => {
     return (dispatch: Dispatch<RootAction>) => {
         dispatch({ type: RESETSTATE })
@@ -30,12 +31,12 @@ export const Register = (dataPost: IPostRegister, callback: Function) => {
                 password: dataPost.password
             }
             try {
-                let rsp = await signin(dataSignin)
-                dispatch({ type: SIGNIN_SUCCESS, payload: rsp.data })
-                callback({
-                    status: true,
-                    apiKey: rsp.data.apiKey,
-                    shopName: rsp.data.shopName
+                SignIn(dataSignin, (data) => {
+                    callback({
+                        status: true,
+                        apiKey: data.apiKey,
+                        shopName: data.shopName
+                    })
                 })
             } catch (error) {
                 console.log(error.message)
@@ -49,5 +50,25 @@ export const GetAccessToken = (code: string) => {
     return async (dispatch: Dispatch<RootAction>) => {
         let rsp = await getAccessToken(code)
         console.log(rsp)
+    }
+}
+
+
+
+export const SignIn = (dataSignin: IPostSignIn, callback: Function = () => { }) => {
+    return async (dispatch: Dispatch<RootAction>) => {
+        let rsp = await signin(dataSignin)
+        if (rsp.success === true) {
+            dispatch({
+                type: SIGNIN_SUCCESS,
+                payload: rsp.data
+            })
+            callback(rsp.data)
+        }
+        else
+            dispatch({
+                type: REGISTER_ERROR,
+                message: rsp.error.message
+            })
     }
 }
