@@ -15,8 +15,8 @@ export class AuthLoadingScreen extends React.Component<IPropsConnectScreen, {}> 
     }
 
     _bootstrapAsync = async () => {
-        const userToken = await AsyncStorage.getItem('userToken');
-        this.props.navigation.navigate(userToken ? 'Main' : 'Auth');
+        const userToken = await AsyncStorage.getItem('login_token');
+        this.props.navigation.navigate(userToken ? 'Home' : 'Auth');
     };
 
     render() {

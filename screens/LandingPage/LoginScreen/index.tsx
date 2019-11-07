@@ -37,21 +37,8 @@ class Login extends React.Component<IPropsLoginScreen, IStateLoginScreen> {
   private onsubmit = async () => {
     let { password, userid } = this.state
     const { SignIn } = this.props
-    //#region 
-    // this.setState({ loading: true }, async () => {
-    //   const url = "http://163.47.9.196:8000/api/login"
-    //   userid = userid.toLowerCase()
-    //   let rsp = await Axios.post(url, { userid, password }), { data } = rsp
-    //   if (data && data.token) {
-    //     await AsyncStorage.setItem('login_token', data.token)
-    //     this.setState({ loading: false }, () => {
-    //       this.props.navigation.push("Connect")
-    //     })
-    //   }
-    // })
-    //#endregion
     const modal = {
-      email: "tmtzminhtri3@gmail.com",
+      email: "tmtzminhtri53111@gmail.com",
       password: "0123123123"
     }
     SignIn(modal, (data: IResponeSignIn) => {

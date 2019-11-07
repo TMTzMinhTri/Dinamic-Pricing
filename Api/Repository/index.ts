@@ -1,6 +1,6 @@
 import { Api } from '..'
 import { IPostRegister, IPostSignIn } from '../../Modals/dataPost'
-import { IResponseStatus, IResponeSignIn } from '../../Modals/response'
+import { IResponseStatus, IResponeSignIn, IResponeListProduct } from '../../Modals/response'
 
 
 
@@ -18,4 +18,9 @@ export const signin = (body: IPostSignIn) => {
 export const getAccessToken = (code: string) => {
     const path = `/auth?code=${code}`
     return Api.Get<IResponseStatus>(path)
+}
+
+export const getListProduct = () => {
+    const path = `/api/product`
+    return Api.Get<IResponeListProduct[]>(path)
 }

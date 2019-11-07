@@ -25,7 +25,7 @@ export class LandingScreen extends React.Component<IPropsLandingScreen, {}> {
         const { navigation } = this.props;
         AsyncStorage.getItem("login_token").then(res => {
             if (res) {
-                navigation.push("Login");
+                navigation.push("Home");
             }
         })
     }

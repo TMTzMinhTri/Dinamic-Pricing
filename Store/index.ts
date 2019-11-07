@@ -3,9 +3,10 @@ import thunk, { ThunkMiddleware } from 'redux-thunk'
 
 import { RootAction } from "../Modals";
 import userinfo from './reducers/auth.reducer'
+import productinfo from './reducers/product.reducer'
 
 const rootReducer = combineReducers({
-    userinfo
+    userinfo, productinfo
 })
 
 const composeEnhancers = process.env.NODE_ENV === 'production'

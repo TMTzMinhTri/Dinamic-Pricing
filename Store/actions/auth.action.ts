@@ -23,33 +23,16 @@ export const Register = (dataPost: IPostRegister, callback: Function) => {
                 type: REGISTER_ERROR,
                 message: data.error.message
             })
-            callback({ status: false })
         }
-        else {
-            const dataSignin: IPostSignIn = {
-                email: dataPost.email,
-                password: dataPost.password
-            }
-            try {
-                SignIn(dataSignin, (data) => {
-                    callback({
-                        status: true,
-                        apiKey: data.apiKey,
-                        shopName: data.shopName
-                    })
-                })
-            } catch (error) {
-                console.log(error.message)
-            }
-
-        }
+        callback({ status: data.success })
     }
 }
 
-export const GetAccessToken = (code: string) => {
+export const GetAccessToken = (code: string, navigate: Function) => {
     return async (dispatch: Dispatch<RootAction>) => {
         let rsp = await getAccessToken(code)
-        console.log(rsp)
+        if (rsp.success === true)
+        navigate("Home")
     }
 }
 

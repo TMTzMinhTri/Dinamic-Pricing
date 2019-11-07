@@ -3,14 +3,15 @@ import { View, Text, StyleSheet, Image, KeyboardAvoidingView, SegmentedControlIO
 import { NavigationStackProp } from 'react-navigation-stack';
 import { Input, Button } from 'react-native-elements';
 import { connect } from "react-redux";
-import { Register, reset, GetAccessToken } from "../../../Store/actions/auth.action";
+import { Register, reset, GetAccessToken, SignIn } from "../../../Store/actions/auth.action";
 import { ThunkDispatch } from "redux-thunk";
 import { RootAction } from "../../../Modals";
 import { bindActionCreators } from "redux";
-import { IPostRegister } from "../../../Modals/dataPost";
+import { IPostRegister, IPostSignIn } from "../../../Modals/dataPost";
 import { RootState } from "../../../Store";
 import { AuthSession } from "expo";
 import * as LocalAuthentication from 'expo-local-authentication'
+import { IResponeSignIn } from "../../../Modals/response";
 
 
 type IPropsRegisterScreen = {
@@ -43,41 +44,38 @@ export class RegisterComponent extends React.Component<IPropsRegisterScreen, ISt
   };
   private onSubmit = async () => {
     const { email, password, userid } = this.state
-    const { register, getAccessToken } = this.props
+    const { register, getAccessToken, navigation, SignIn } = this.props
     const modal: IPostRegister = {
-      email: "tmtzminhtri3@gmail.com",
+      email: "tmtzminhtri53111@gmail.com",
       name: "Minh Tri",
       password: "0123123123",
       shopName: "harend"
     }
-    this.setState({ loading: true }, () => {
-      register(modal, (value) => {
-        this.setState({ loading: false }, async () => {
-          const { status, apiKey, shopName } = value
-          if (status === true) {
-            const redirectUrl = AuthSession.getRedirectUrl();
-            const result: any = await AuthSession.startAsync({
-              authUrl:
-                `https://${shopName}.myharavan.com/admin/api/auth/?api_key=${apiKey}&redirect_uri=${encodeURIComponent(redirectUrl)}`,
-            });
-            if (result.type == "success") {
-              getAccessToken(result.params.code)
-            }
+    register(modal, (value) => {
+      if (value.status === true) {
+        const dataSignin: IPostSignIn = {
+          email: modal.email,
+          password: modal.password
+        }
+        SignIn(dataSignin, async (data: IResponeSignIn) => {
+          const redirectUrl = AuthSession.getRedirectUrl();
+          const result = await AuthSession.startAsync({
+            authUrl:
+              `https://${data.shopName}.myharavan.com/admin/api/auth/?api_key=${data.apiKey}&redirect_uri=${encodeURIComponent(redirectUrl)}`,
+          });
+          if (result.type === "success") {
+            getAccessToken(result.params.code, navigation.navigate)
           }
         })
-      })
+      }
     })
-    // console.log('aaa')
-    // LocalAuthentication.authenticateAsync({
-    //   promptMessage: "TouchID",
-    //   fallbackLabel: "Passcode"
-    // }).then(value => console.log(value))
+
   }
   render() {
     const { errorMessage, reset, } = this.props
     const { loading } = this.state
-    return (loading === false
-      ? < React.Fragment >
+    return (
+      < React.Fragment >
         {errorMessage && Alert.alert("Error", errorMessage, [
           { text: 'Cancel', style: 'cancel', onPress: () => reset() },
         ])}
@@ -130,7 +128,7 @@ export class RegisterComponent extends React.Component<IPropsRegisterScreen, ISt
           </View>
         </KeyboardAvoidingView>
       </React.Fragment >
-      : <ActivityIndicator size="large" color="#00ff00" />
+
     );
   }
 }
@@ -143,7 +141,8 @@ interface IState {
 interface IAction {
   register: (data: IPostRegister, callback: Function) => void,
   reset: VoidFunction,
-  getAccessToken: (code: string) => void
+  getAccessToken: (code: string, navigate: Function) => void,
+  SignIn: (data: IPostSignIn, callback: Function) => void
 }
 
 
@@ -157,7 +156,8 @@ const mapStateToProps = (state: RootState): IState => ({
 const mapDispatchToProps = (dispatch: ThunkDispatch<any, any, RootAction>): IAction => ({
   register: bindActionCreators(Register, dispatch),
   reset: bindActionCreators(reset, dispatch),
-  getAccessToken: bindActionCreators(GetAccessToken, dispatch)
+  getAccessToken: bindActionCreators(GetAccessToken, dispatch),
+  SignIn: bindActionCreators(SignIn, dispatch)
 })
 
 export const RegisterScreen = connect(mapStateToProps, mapDispatchToProps)(RegisterComponent)
