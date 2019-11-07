@@ -19,22 +19,22 @@ type IPropsRegisterScreen = {
 } & IAction & IState
 
 interface IStateRegisterScreen {
-  userid: string;
+  shopName: string;
   password: string;
   confirmPassword: string;
   email: string;
-  loading: boolean
+  name: string
 }
 
 export class RegisterComponent extends React.Component<IPropsRegisterScreen, IStateRegisterScreen> {
   constructor(props) {
     super(props);
     this.state = {
-      userid: "",
+      shopName: "",
       password: "",
       confirmPassword: "",
       email: "",
-      loading: false
+      name: "",
     };
   }
   static navigationOptions = ({ navigation }) => {
@@ -43,13 +43,15 @@ export class RegisterComponent extends React.Component<IPropsRegisterScreen, ISt
     };
   };
   private onSubmit = async () => {
-    const { email, password, userid } = this.state
+    const { email, password, shopName, name } = this.state
     const { register, getAccessToken, navigation, SignIn } = this.props
+
+
     const modal: IPostRegister = {
-      email: "tmtzminhtri53111@gmail.com",
-      name: "Minh Tri",
-      password: "0123123123",
-      shopName: "harend"
+      email: email.toLowerCase().trim(),
+      name: name.trim().toLowerCase(),
+      password: password.trim(),
+      shopName: shopName.trim().toLowerCase()
     }
     register(modal, (value) => {
       if (value.status === true) {
@@ -72,8 +74,7 @@ export class RegisterComponent extends React.Component<IPropsRegisterScreen, ISt
 
   }
   render() {
-    const { errorMessage, reset, } = this.props
-    const { loading } = this.state
+    const { errorMessage, reset } = this.props
     return (
       < React.Fragment >
         {errorMessage && Alert.alert("Error", errorMessage, [
@@ -96,27 +97,33 @@ export class RegisterComponent extends React.Component<IPropsRegisterScreen, ISt
             <View style={styles.body}>
               <Input
                 onChange={value =>
-                  this.setState({ userid: value.nativeEvent.text })
+                  this.setState({ email: value.nativeEvent.text })
                 }
-                placeholder="Tên đăng nhập"
+                placeholder="Email"
               />
               <Input
                 onChange={value =>
                   this.setState({ password: value.nativeEvent.text })
                 }
-                placeholder="mật khẩu"
+                placeholder="Mật khẩu"
               />
               <Input
                 onChange={value =>
                   this.setState({ confirmPassword: value.nativeEvent.text })
                 }
-                placeholder="xác nhận mật khẩu"
+                placeholder="Xác nhận mật khẩu"
               />
               <Input
                 onChange={value =>
-                  this.setState({ email: value.nativeEvent.text })
+                  this.setState({ name: value.nativeEvent.text })
                 }
-                placeholder="email"
+                placeholder="Tên của bạn là ?"
+              />
+              <Input
+                onChange={value =>
+                  this.setState({ shopName: value.nativeEvent.text })
+                }
+                placeholder="Tên cửa hàng trên haravan"
               />
               <TouchableOpacity
                 style={styles.touchbtn}
@@ -128,7 +135,6 @@ export class RegisterComponent extends React.Component<IPropsRegisterScreen, ISt
           </View>
         </KeyboardAvoidingView>
       </React.Fragment >
-
     );
   }
 }

@@ -17,7 +17,7 @@ type IPropsLoginScreen = {
 } & IAction & IState
 
 interface IStateLoginScreen {
-  userid: string;
+  email: string;
   password: string;
   loading: boolean
 }
@@ -26,7 +26,7 @@ class Login extends React.Component<IPropsLoginScreen, IStateLoginScreen> {
   constructor(props) {
     super(props);
     this.state = {
-      userid: "",
+      email: "",
       password: "",
       loading: false
     };
@@ -35,11 +35,11 @@ class Login extends React.Component<IPropsLoginScreen, IStateLoginScreen> {
     return { headerTitle: "Đăng nhập" };
   };
   private onsubmit = async () => {
-    let { password, userid } = this.state
+    let { password, email } = this.state
     const { SignIn } = this.props
     const modal = {
-      email: "tmtzminhtri53111@gmail.com",
-      password: "0123123123"
+      email: email.toLowerCase().trim(),
+      password: password.trim()
     }
     SignIn(modal, (data: IResponeSignIn) => {
       if (data) {
@@ -70,8 +70,8 @@ class Login extends React.Component<IPropsLoginScreen, IStateLoginScreen> {
           </View>
           <View style={styles.body}>
             <Input
-              onChange={value => this.setState({ userid: value.nativeEvent.text })}
-              placeholder="Tên đăng nhập"
+              onChange={value => this.setState({ email: value.nativeEvent.text })}
+              placeholder="email"
               style={{ marginBottom: 50 }}
             />
             <Input
