@@ -41,9 +41,12 @@ class Login extends React.Component<IPropsLoginScreen, IStateLoginScreen> {
       email: email.toLowerCase().trim(),
       password: password.trim()
     }
-    SignIn(modal, (data: IResponeSignIn) => {
+    const data = {
+      email: 'minhtri1@gmail.com',
+      password: "123123"
+    }
+    SignIn(data, (data: IResponeSignIn) => {
       if (data) {
-        console.log('aaa')
         this.props.navigation.navigate("Main")
       }
     })
@@ -61,7 +64,7 @@ class Login extends React.Component<IPropsLoginScreen, IStateLoginScreen> {
         <View style={styles.container}>
           <View style={styles.header}>
             <Image
-              // style={{ width: 1000, height: 120 }}
+              style={{ width: 1000, height: 120 }}
               resizeMethod="resize"
               resizeMode="contain"
               source={require("../../../assets/images.png")}

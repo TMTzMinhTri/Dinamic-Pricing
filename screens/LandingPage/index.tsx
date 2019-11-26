@@ -23,11 +23,11 @@ export class LandingScreen extends React.Component<IPropsLandingScreen, {}> {
   };
     componentDidMount() {
         const { navigation } = this.props;
-        AsyncStorage.getItem("login_token").then(res => {
-            if (res) {
-                navigation.push("Home");
-            }
-        })
+        // AsyncStorage.getItem("login_token").then(res => {
+        //     if (res) {
+        //         navigation.push("Home");
+        //     }
+        // })
     }
 
   private _register = () => {

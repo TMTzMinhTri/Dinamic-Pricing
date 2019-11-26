@@ -1,9 +1,10 @@
-import { IResponeSignIn, IResponeListProduct } from "./response"
+import { IResponeSignIn, IResponeListProduct, IResponeListOrders } from "./response"
 
 export const REGISTER_ERROR = "REGISTER_ERROR"
 export const RESETSTATE = "RESETSTATE"
 export const SIGNIN_SUCCESS = "SIGNIN_SUCCESS"
 export const GET_LIST_PRODUCT = "GET_LIST_PRODUCT"
+export const GET_LIST_ORDERS = "GET_LIST_ORDERS"
 
 
 export interface IActionRegister {
@@ -21,4 +22,9 @@ export interface DispatchFunction {
     type: typeof GET_LIST_PRODUCT,
     payload: IResponeListProduct[]
 }
-export type AuthActionType = IActionRegister | ResetState | IActionSigninSuccess | DispatchFunction
+export interface GetOrders {
+    type: typeof GET_LIST_ORDERS,
+    payload: IResponeListOrders[]
+
+}
+export type AuthActionType = IActionRegister | ResetState | IActionSigninSuccess | DispatchFunction | GetOrders

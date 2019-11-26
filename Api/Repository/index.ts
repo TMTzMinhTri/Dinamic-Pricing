@@ -1,4 +1,4 @@
-import { Api } from '..'
+import { Api, IResponse } from '..'
 import { IPostRegister, IPostSignIn } from '../../Modals/dataPost'
 import { IResponseStatus, IResponeSignIn, IResponeListProduct } from '../../Modals/response'
 
@@ -23,4 +23,28 @@ export const getAccessToken = (code: string) => {
 export const getListProduct = () => {
     const path = `/api/product`
     return Api.Get<IResponeListProduct[]>(path)
+}
+
+export const sendEmail = (email: string) => {
+    const path = `/api/user/access_email?email=${email}`
+    return Api.Get<any>(path)
+}
+export const verifyEmail = (code: string, session_id: string) => {
+    const path = `/api/user/verify?verify_code=${code}&session_id=${session_id}`
+    return Api.Get<any>(path)
+}
+
+export const checkStep = (email: string) => {
+    const path = `/api/user/check-step?email=${email}`
+    return Api.Get(path)
+}
+
+export const updateStep = (id) => {
+    const path = `/api/user/updateStep?id=${id}`
+    return Api.Get(path)
+}
+
+export const getListOrders = () => {
+    const path = `/api/product/orders`
+    return Api.Get<any>(path)
 }

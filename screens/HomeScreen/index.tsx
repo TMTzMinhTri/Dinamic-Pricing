@@ -2,22 +2,25 @@ import React from "react";
 import { View, FlatList, Button, TouchableOpacity, AsyncStorage, ActivityIndicator, StyleSheet, Text, RefreshControl } from "react-native";
 import { NavigationStackProp } from 'react-navigation-stack';
 
+import { connect } from "react-redux";
+import { RootState } from "../../Store";
+import { ThunkDispatch } from "redux-thunk";
+import { RootAction } from "../../Modals";
+import { IResponeListOrders } from "../../Modals/response";
+import { bindActionCreators } from "redux";
+import { getorder } from "../../Store/actions/product.action";
 
-import axios from "axios";
-
-// import * as Component from "../../components";
-// import { IProductItem } from "../InventoryScreen";
 
 type IInventoryScreenProps = {
     navigation: NavigationStackProp;
-}
+} & IState & IAction
 interface IHomeScreenState {
     loading: boolean,
     // ListProduct: IProductItem[]
     refreshing: boolean
 
 }
-export class HomeScreen extends React.Component<IInventoryScreenProps, IHomeScreenState> {
+class homeScreen extends React.Component<IInventoryScreenProps, IHomeScreenState> {
     constructor(props) {
         super(props)
         this.state = {
@@ -37,54 +40,7 @@ export class HomeScreen extends React.Component<IInventoryScreenProps, IHomeScre
         this.props.navigation.navigate('Auth');
     };
     componentDidMount() {
-        this.setState({ loading: true }, () => {
-            this.getListProductPromoting()
-        })
-    }
-    componentWillUnmount() {
-        console.log('aaa')
-    }
-
-    private getListProductPromoting = async () => {
-        const token = await AsyncStorage.getItem("login_token")
-        const url = `http://163.47.9.196:8000/api/getdata/promotingproducts`
-        let rsp = await axios.get(url, {
-            headers: { "Authorization": token }
-        })
-        this.setState({
-            loading: false,
-            refreshing: false
-        })
-    }
-    // private sendToken = async (callback: Function = () => { }) => {
-    //     try {
-    //         const url = "http://163.47.9.196:8000/api/updatecode"
-    //         const token = await AsyncStorage.getItem("login_token")
-    //         const code = await AsyncStorage.getItem("code")
-    //         const shop = await AsyncStorage.getItem("shop")
-    //         console.log(token, code, shop)
-
-    //         let rsp = await axios.post(url, {
-    //             code,
-    //             shop_name: shop
-    //         }, {
-    //             headers: { "Authorization": token }
-    //         })
-    //         console.log(rsp.data)
-    //     } catch (error) {
-    //         console.log(error)
-    //     }
-    //     callback(true)
-    // }
-    private handlePromotionStatus = (value) => {
-        this.setState({ loading: value }, () => {
-            this.getListProductPromoting()
-        })
-    }
-    private onRefresh = () => {
-        this.setState({ refreshing: true }, () => {
-            this.getListProductPromoting()
-        })
+        this.props.getOrders()
     }
     onTouchImage = (data) => {
         this.props.navigation.navigate("Details", {
@@ -101,6 +57,23 @@ export class HomeScreen extends React.Component<IInventoryScreenProps, IHomeScre
             </View>)
     }
 }
+interface IState {
+    listOrders: IResponeListOrders[]
+}
+interface IAction {
+    getOrders: VoidFunction
+}
+
+
+const mapStateToProps = (state: RootState): IState => ({
+    listOrders: state.productinfo.listOrders
+})
+
+
+const mapDispatchToProps = (dispatch: ThunkDispatch<any, any, RootAction>): IAction => ({
+    getOrders: bindActionCreators(getorder, dispatch)
+})
+export const HomeScreen = connect(mapStateToProps, mapDispatchToProps)(homeScreen)
 
 const styles = StyleSheet.create({
     container: {

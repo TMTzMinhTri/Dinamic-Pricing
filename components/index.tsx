@@ -2,5 +2,5 @@
 
 // export { Modal } from './Modal'
 
-// export { Modals } from './Popup'
+export { Modals } from './Popup'
 // export { ProductItem } from './ProductItem'

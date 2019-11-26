@@ -23,20 +23,20 @@ export class ConnectScreen extends React.Component<IPropsConnectScreen, ILoginSc
             headerTitle: "Kết nối"
         };
     }
-    componentDidMount() {
-        const { navigation } = this.props;
-        (AsyncStorage.getItem("code").then(res => {
-            if (res) {
-                navigation.navigate("Main");
-            }
-        }))
-    }
+    // componentDidMount() {
+    //     const { navigation } = this.props;
+    //     (AsyncStorage.getItem("code").then(res => {
+    //         if (res) {
+    //             navigation.navigate("Main");
+    //         }
+    //     }))  
+    // }
     _handlePressAsync = async () => {
         // const { shopName } = this.state
         const { navigation } = this.props;
         let redirectUrl = AuthSession.getRedirectUrl();
         let shopName = "harend"
-        const apikey = "36d2d4d477b02bde8cd716af0c0272dd"
+        const apikey = "bd7b21fa44f96ed035b3ce15fa225721"
         let result: any = await AuthSession.startAsync({
             authUrl:
                 `https://${shopName}.myharavan.com/admin/api/auth/?api_key=${apikey}&redirect_uri=${encodeURIComponent(redirectUrl)}`,
@@ -46,42 +46,27 @@ export class ConnectScreen extends React.Component<IPropsConnectScreen, ILoginSc
 
         if (type === 'success') {
             await AsyncStorage.setItem("code", result.params.code)
-            await AsyncStorage.setItem("shop", result.params.shop)
+            await AsyncStorage.setItem("shopName", shopName)
+
             navigation.navigate("Main");
-
-            // try {
-            //     const url = "http://163.47.9.196:8000/api/updatecode "
-            //     const token = await AsyncStorage.getItem("login_token")
-            //     let rsp = await axios.post(url, {
-            //         code: result.params.code,
-            //         shop_name: result.params.shop
-            //     }, {
-            //         headers: { "Authorization": token }
-            //     })
-            //     console.log(rsp.data)
-            // } catch (error) {
-
-            // }
-
-
         }
     }
 
-    private sendToken = async (result) => {
-        try {
-            const url = "http://163.47.9.196:8000/api/updatecode"
-            const token = await AsyncStorage.getItem("login_token")
-            let rsp = await axios.post(url, {
-                code: result.params.code,
-                shop_name: result.params.shop
-            }, {
-                headers: { "Authorization": token }
-            })
-            console.log(rsp.data)
-        } catch (error) {
+    // private sendToken = async (result) => {
+    //     try {
+    //         const url = "http://163.47.9.196:8000/api/updatecode"
+    //         const token = await AsyncStorage.getItem("login_token")
+    //         let rsp = await axios.post(url, {
+    //             code: result.params.code,
+    //             shop_name: result.params.shop
+    //         }, {
+    //             headers: { "Authorization": token }
+    //         })
+    //         console.log(rsp.data)
+    //     } catch (error) {
 
-        }
-    }
+    //     }
+    // }
 
 
     render() {
@@ -89,8 +74,7 @@ export class ConnectScreen extends React.Component<IPropsConnectScreen, ILoginSc
             <View style={styles.container}>
                 <KeyboardAvoidingView
                     enabled
-                    behavior="padding"
-                >
+                    behavior="padding">
                     <Input
                         onChange={(value) => this.setState({ shopName: value.nativeEvent.text })}
                         placeholder='Shop name'

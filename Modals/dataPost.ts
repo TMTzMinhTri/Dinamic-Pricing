@@ -1,8 +1,7 @@
 export interface IPostRegister {
     name: string,
-    email: string,
     password: string,
-    shopName: string
+    email: string
 }
 export interface IPostSignIn {
     email: string,

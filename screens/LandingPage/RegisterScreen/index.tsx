@@ -3,15 +3,16 @@ import { View, Text, StyleSheet, Image, KeyboardAvoidingView, SegmentedControlIO
 import { NavigationStackProp } from 'react-navigation-stack';
 import { Input, Button } from 'react-native-elements';
 import { connect } from "react-redux";
-import { Register, reset, GetAccessToken, SignIn } from "../../../Store/actions/auth.action";
+import { Register, reset, GetAccessToken, SignIn, SendEmail, VerifyEmail } from "../../../Store/actions/auth.action";
 import { ThunkDispatch } from "redux-thunk";
 import { RootAction } from "../../../Modals";
 import { bindActionCreators } from "redux";
 import { IPostRegister, IPostSignIn } from "../../../Modals/dataPost";
 import { RootState } from "../../../Store";
 import { AuthSession } from "expo";
-import * as LocalAuthentication from 'expo-local-authentication'
+import * as Components from "../../../components";
 import { IResponeSignIn } from "../../../Modals/response";
+import { getAccessToken } from "../../../Api/Repository";
 
 
 type IPropsRegisterScreen = {
@@ -23,7 +24,10 @@ interface IStateRegisterScreen {
   password: string;
   confirmPassword: string;
   email: string;
-  name: string
+  name: string,
+  popupComfirm: boolean,
+  verifyCode: string,
+  session_id: string
 }
 
 export class RegisterComponent extends React.Component<IPropsRegisterScreen, IStateRegisterScreen> {
@@ -35,6 +39,9 @@ export class RegisterComponent extends React.Component<IPropsRegisterScreen, ISt
       confirmPassword: "",
       email: "",
       name: "",
+      popupComfirm: false,
+      verifyCode: "",
+      session_id: ""
     };
   }
   static navigationOptions = ({ navigation }) => {
@@ -44,39 +51,72 @@ export class RegisterComponent extends React.Component<IPropsRegisterScreen, ISt
   };
   private onSubmit = async () => {
     const { email, password, shopName, name } = this.state
-    const { register, getAccessToken, navigation, SignIn } = this.props
-
-
+    const { register } = this.props
     const modal: IPostRegister = {
-      email: email.toLowerCase().trim(),
+      email: email.trim().toLowerCase(),
       name: name.trim().toLowerCase(),
       password: password.trim(),
-      shopName: shopName.trim().toLowerCase()
     }
-    register(modal, (value) => {
+    const data = {
+      name: 'asdasd',
+      password: "123123",
+      email: "minhtri1@gmail.com",
+      shopName: 'harend'
+    }
+    register(data, async (value) => {
+      console.log(value)
       if (value.status === true) {
-        const dataSignin: IPostSignIn = {
-          email: modal.email,
-          password: modal.password
-        }
-        SignIn(dataSignin, async (data: IResponeSignIn) => {
-          const redirectUrl = AuthSession.getRedirectUrl();
-          const result = await AuthSession.startAsync({
-            authUrl:
-              `https://${data.shopName}.myharavan.com/admin/api/auth/?api_key=${data.apiKey}&redirect_uri=${encodeURIComponent(redirectUrl)}`,
-          });
-          if (result.type === "success") {
-            getAccessToken(result.params.code, navigation.navigate)
-          }
-        })
+        await AsyncStorage.setItem('email', data.email)
+        this.setState({ popupComfirm: true })
       }
     })
 
   }
+  private confirmemail = async () => {
+    const { verifyCode, session_id, name, password, email } = this.state
+    const { navigation, VerifyEmail, register } = this.props
+
+    let redirectUrl = AuthSession.getRedirectUrl();
+    let shopName = "harend"
+    const apikey = "bd7b21fa44f96ed035b3ce15fa225721"
+    this.setState({ popupComfirm: false }, async () => {
+      let result: any = await AuthSession.startAsync({
+        authUrl:
+          `https://${shopName}.myharavan.com/admin/api/auth/?api_key=${apikey}&redirect_uri=${encodeURIComponent(redirectUrl)}`,
+      });
+      const { type } = result;
+
+      if (type === 'success') {
+        console.log('aaa')
+        getAccessToken(result.params.code).then((res: any) => {
+          if (res.success == true)
+            navigation.navigate("Main")
+        })
+      }
+
+    })
+  }
+
+  private RenderPopupComfirm = () => {
+    const { popupComfirm, verifyCode } = this.state
+    return <Components.Modals modalVisible={popupComfirm}>
+      <View style={{ padding: 30 }}>
+        <View style={{ marginBottom: 20 }}>
+          <Text style={{ fontSize: 25, textTransform: "uppercase", fontWeight: "bold" }}>Kết nối</Text>
+        </View>
+        <Button
+          title="Kết nối"
+          onPress={this.confirmemail} />
+      </View>
+    </Components.Modals>
+  }
+
   render() {
-    const { errorMessage, reset } = this.props
+    const { errorMessage, reset, navigation } = this.props
+    const { popupComfirm } = this.state
     return (
       < React.Fragment >
+        {popupComfirm && this.RenderPopupComfirm()}
         {errorMessage && Alert.alert("Error", errorMessage, [
           { text: 'Cancel', style: 'cancel', onPress: () => reset() },
         ])}
@@ -96,34 +136,37 @@ export class RegisterComponent extends React.Component<IPropsRegisterScreen, ISt
             </View>
             <View style={styles.body}>
               <Input
+                label="Email"
+                containerStyle={{ marginBottom: 20 }}
+
                 onChange={value =>
                   this.setState({ email: value.nativeEvent.text })
                 }
                 placeholder="Email"
               />
               <Input
+                label="Mật khẩu"
+                containerStyle={{ marginBottom: 20 }}
+
                 onChange={value =>
                   this.setState({ password: value.nativeEvent.text })
                 }
                 placeholder="Mật khẩu"
               />
               <Input
+                containerStyle={{ marginBottom: 20 }}
+                label="Xác nhận mật khẩu"
                 onChange={value =>
                   this.setState({ confirmPassword: value.nativeEvent.text })
                 }
                 placeholder="Xác nhận mật khẩu"
               />
               <Input
+                label="Họ và tên"
                 onChange={value =>
                   this.setState({ name: value.nativeEvent.text })
                 }
                 placeholder="Tên của bạn là ?"
-              />
-              <Input
-                onChange={value =>
-                  this.setState({ shopName: value.nativeEvent.text })
-                }
-                placeholder="Tên cửa hàng trên haravan"
               />
               <TouchableOpacity
                 style={styles.touchbtn}
@@ -144,11 +187,14 @@ interface IState {
   shopName: string,
   apiKey: string
 }
+//#region 
 interface IAction {
   register: (data: IPostRegister, callback: Function) => void,
   reset: VoidFunction,
   getAccessToken: (code: string, navigate: Function) => void,
-  SignIn: (data: IPostSignIn, callback: Function) => void
+  SignIn: (data: IPostSignIn, callback: Function) => void,
+  SendEmail: (email: string, callback: Function) => void,
+  VerifyEmail: (code: string, session_id: string, callback: Function) => void
 }
 
 
@@ -163,9 +209,11 @@ const mapDispatchToProps = (dispatch: ThunkDispatch<any, any, RootAction>): IAct
   register: bindActionCreators(Register, dispatch),
   reset: bindActionCreators(reset, dispatch),
   getAccessToken: bindActionCreators(GetAccessToken, dispatch),
-  SignIn: bindActionCreators(SignIn, dispatch)
+  SignIn: bindActionCreators(SignIn, dispatch),
+  SendEmail: bindActionCreators(SendEmail, dispatch),
+  VerifyEmail: bindActionCreators(VerifyEmail, dispatch)
 })
-
+//#endregion
 export const RegisterScreen = connect(mapStateToProps, mapDispatchToProps)(RegisterComponent)
 
 const styles = StyleSheet.create({
