@@ -1,5 +1,5 @@
 import React from "react";
-import { Text, ActivityIndicator, FlatList, RefreshControl, AsyncStorage, View, Image } from "react-native";
+import { Text, ActivityIndicator, FlatList, StyleSheet, TouchableOpacity } from "react-native";
 import { NavigationStackProp } from 'react-navigation-stack';
 import { connect } from "react-redux";
 import { ThunkDispatch } from "redux-thunk";
@@ -12,7 +12,7 @@ import { bindActionCreators } from "redux";
 import { IResponeListProduct } from "../../Modals/response";
 import { checkStep, updateStep } from "../../Api/Repository";
 import { ProductItem } from "./ProductItem";
-
+import { ModalAddProduct } from "./ModalAddProduct";
 type IInventoryScreenProps = {
     navigation: NavigationStackProp;
 } & IAction & IState
@@ -54,23 +54,57 @@ class Inventory extends React.Component<IInventoryScreenProps, IInventoryScreenS
             data
         })
     }
+    setModalVisible(visible) {
+        console.log(visible)
+        this.setState({ modalVisible: visible });
+    }
 
     render() {
-        const { loading, refreshing } = this.state
+        const { loading, modalVisible } = this.state
         const { listProduct } = this.props
         return loading === true
             ? <ActivityIndicator size="large" color="#00ff00" />
             // ? <Button title="reset" onPress={async () => await AsyncStorage.clear() } />
-            : <FlatList
+            : <><FlatList
                 data={listProduct}
                 contentContainerStyle={{ padding: 20 }}
                 renderItem={({ item }) => <ProductItem product={item} />}
                 keyExtractor={item => item.id.toString()}
                 initialNumToRender={5}
+                ListHeaderComponent={<Text style={styles.headerFlatlist}>Danh sách sản phẩm</Text>}
                 onEndReachedThreshold={0.5}
             />
+                <ModalAddProduct modalVisible={modalVisible} closeModal={(value) => this.setModalVisible(value)} />
+                <TouchableOpacity onPress={() => this.setModalVisible(true)} style={styles.fab}>
+                    <Text style={styles.fabIcon}>+</Text>
+                </TouchableOpacity>
+            </>
     }
 }
+
+const styles = StyleSheet.create({
+    headerFlatlist: {
+        fontSize: 30,
+        textAlign: "center"
+    },
+    fab: {
+        position: 'absolute',
+        width: 56,
+        height: 56,
+        alignItems: 'center',
+        justifyContent: 'center',
+        right: 20,
+        bottom: 20,
+        backgroundColor: '#03A9F4',
+        borderRadius: 30,
+        elevation: 8
+    },
+    fabIcon: {
+        fontSize: 40,
+        color: 'white'
+    }
+});
+
 interface IState {
     listProduct: IResponeListProduct[]
 }

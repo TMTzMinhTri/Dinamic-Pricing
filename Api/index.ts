@@ -18,6 +18,7 @@ export const Api = {
     async Get<T>(path: string) {
         const url = `${this.url}${path}`
         const login_token = await AsyncStorage.getItem("login_token")
+
         return new Promise((resolve, reject) => {
             fetch(url, {
                 method: "GET",
@@ -25,6 +26,22 @@ export const Api = {
                 headers: {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json',
+                    "login_token": login_token ? login_token : null
+                }
+            }).then(result => {
+                resolve(result.json())
+            }).catch(e => reject(e))
+        }) as Promise<IResponse<T>>
+    },
+    async POST_MULTIPART<T>(path, body) {
+        const url = `${this.url}${path}`
+        const login_token = await AsyncStorage.getItem("login_token")
+        return new Promise((resolve, reject) => {
+            fetch(url, {
+                method: "POST",
+                body: body,
+                headers: {
+                    'Content-Type': 'multipart/form-data',
                     "login_token": login_token ? login_token : null
                 }
             }).then(result => {

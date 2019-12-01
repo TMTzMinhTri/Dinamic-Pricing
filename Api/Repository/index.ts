@@ -48,3 +48,8 @@ export const getListOrders = () => {
     const path = `/api/product/orders`
     return Api.Get<any>(path)
 }
+
+export const createProduct = (body) => {
+    const path = `/api/product`
+    return Api.POST_MULTIPART(path, body)
+}

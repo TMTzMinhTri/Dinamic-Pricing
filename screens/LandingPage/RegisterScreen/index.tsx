@@ -60,7 +60,7 @@ export class RegisterComponent extends React.Component<IPropsRegisterScreen, ISt
     const data = {
       name: 'asdasd',
       password: "123123",
-      email: "minhtri1@gmail.com",
+      email: "minhtri11@gmail.com",
       shopName: 'harend'
     }
     register(data, async (value) => {
@@ -163,6 +163,13 @@ export class RegisterComponent extends React.Component<IPropsRegisterScreen, ISt
               />
               <Input
                 label="Họ và tên"
+                onChange={value =>
+                  this.setState({ name: value.nativeEvent.text })
+                }
+                placeholder="Tên của bạn là ?"
+              />
+              <Input
+                label=""
                 onChange={value =>
                   this.setState({ name: value.nativeEvent.text })
                 }
