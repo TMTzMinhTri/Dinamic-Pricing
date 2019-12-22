@@ -3,8 +3,8 @@ import { HomeStack, UserStack, RootInventoryStack } from "./stack_navigation";
 
 const tabNavigator = createBottomTabNavigator({
     RootInventoryStack,
-    HomeStack,
-    UserStack
+    // HomeStack,
+    // UserStack
 });
 
 export default tabNavigator;

@@ -1,15 +1,15 @@
 import { IResponeListProduct, IResponeListOrders } from "../../Modals/response";
 import { RootAction } from "../../Modals";
-import { GET_LIST_PRODUCT, GET_LIST_ORDERS } from "../../Modals/action";
+import { GET_LIST_PRODUCT, GET_LIST_ORDERS, CREATE_PRODUCT } from "../../Modals/action";
 
 interface IproductReducer {
-    listProduct: IResponeListProduct[],
+    listProduct: any,
     listOrders: IResponeListOrders[]
 }
 
 const initialState = {
-    listProduct: []
-
+    listProduct: [],
+    listOrders: []
 } as IproductReducer
 
 
@@ -24,6 +24,12 @@ export default function (state = initialState, action: RootAction): IproductRedu
             return {
                 ...state,
                 listOrders: action.payload
+            }
+        case CREATE_PRODUCT:
+            console.log(action.payload)
+            return {
+                ...state,
+                listProduct: state.listProduct.push(action.payload)
             }
         default:
             return {

@@ -52,7 +52,7 @@ class homeScreen extends React.Component<IInventoryScreenProps, IHomeScreenState
         return (
             <View style={[styles.container, styles.horizontal]}>
                 <ActivityIndicator size="large" color="#00ff00" />
-                <Button title="reset" onPress={async () => await AsyncStorage.clear()} />
+                <Button title="reset" onPress={this._clearToken} />
 
             </View>)
     }

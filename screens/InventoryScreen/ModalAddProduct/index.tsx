@@ -7,30 +7,48 @@ import Constants from 'expo-constants';
 import { connect } from 'react-redux';
 import { ThunkDispatch } from 'redux-thunk';
 import { RootAction } from '../../../Modals';
+import { bindActionCreators } from 'redux';
+import { CreateProduct } from '../../../Store/actions/product.action';
 
 interface IProps {
     modalVisible: boolean,
     closeModal: Function
 }
+type IPRops = IProps & IActionProps
 interface IState {
     image: string,
     title: string,
     product_type: string,
-    vendor: string
+    vendor: string,
+    file: any
 }
-class modalAddProduct extends Component<IProps, IState> {
+class modalAddProduct extends Component<IPRops, IState> {
     constructor(props) {
         super(props)
         this.state = {
             image: null,
             product_type: "",
             title: "",
-            vendor: ""
+            vendor: "",
+            file: null
         }
     }
     componentDidMount() {
         this.getPermissionAsync();
     }
+
+    createProduct = () => {
+        const { image, vendor, product_type, title, file } = this.state
+        const { createProduct, closeModal } = this.props
+        let formdata = new FormData();
+        formdata.append("title", title)
+        formdata.append("vendor", vendor)
+        formdata.append("product_type", product_type)
+        formdata.append("image", file)
+        createProduct(formdata, () => {
+        })
+    }
+
     getPermissionAsync = async () => {
         if (Constants.platform.ios) {
             const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
@@ -48,10 +66,13 @@ class modalAddProduct extends Component<IProps, IState> {
             quality: 1
         }) as any
 
-        console.log(result);
 
         if (!result.cancelled) {
-            this.setState({ image: result.uri });
+            let localUri = result.uri;
+            let filename = localUri.split('/').pop();
+            let match = /\.(\w+)$/.exec(filename);
+            let type = match ? `image/${match[1]}` : `image`;
+            this.setState({ image: result.uri, file: { uri: localUri, name: filename, type } });
         }
     };
 
@@ -99,6 +120,7 @@ class modalAddProduct extends Component<IProps, IState> {
                                 title="Pick an image from camera roll"
                                 onPress={this._pickImage}
                             />
+                            <Button title="Submit" onPress={this.createProduct} />
                             <Button title="Cancle" onPress={() => closeModal(false)} />
                         </View>
                     </View>
@@ -112,9 +134,10 @@ interface IStateProps {
 
 }
 interface IActionProps {
-    
+    createProduct: (data, callback) => void
 }
 const mapDispatchToProps = (dispatch: ThunkDispatch<any, any, RootAction>): IActionProps => ({
+    createProduct: bindActionCreators(CreateProduct, dispatch)
 })
 
-export const ModalAddProduct = connect()(modalAddProduct)
+export const ModalAddProduct = connect(null, mapDispatchToProps)(modalAddProduct)

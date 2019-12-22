@@ -5,6 +5,7 @@ export const RESETSTATE = "RESETSTATE"
 export const SIGNIN_SUCCESS = "SIGNIN_SUCCESS"
 export const GET_LIST_PRODUCT = "GET_LIST_PRODUCT"
 export const GET_LIST_ORDERS = "GET_LIST_ORDERS"
+export const CREATE_PRODUCT = "CREATE_PRODUCT"
 
 
 export interface IActionRegister {
@@ -25,6 +26,12 @@ export interface DispatchFunction {
 export interface GetOrders {
     type: typeof GET_LIST_ORDERS,
     payload: IResponeListOrders[]
-
 }
-export type AuthActionType = IActionRegister | ResetState | IActionSigninSuccess | DispatchFunction | GetOrders
+
+export interface ICreateProduct {
+    type: typeof CREATE_PRODUCT,
+    payload: IResponeListProduct
+}
+
+export type AuthActionType = IActionRegister | ResetState | IActionSigninSuccess
+    | DispatchFunction | GetOrders | ICreateProduct

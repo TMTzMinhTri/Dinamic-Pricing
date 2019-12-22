@@ -17,7 +17,7 @@ export class AuthLoadingScreen extends React.Component<IPropsConnectScreen, {}> 
     componentDidMount() {
         setTimeout(() => {
             this._bootstrapAsync()
-        }, 1000)
+        }, 3000)
     }
 
     _bootstrapAsync = async () => {

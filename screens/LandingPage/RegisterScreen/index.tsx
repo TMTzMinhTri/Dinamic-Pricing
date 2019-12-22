@@ -58,10 +58,10 @@ export class RegisterComponent extends React.Component<IPropsRegisterScreen, ISt
       password: password.trim(),
     }
     const data = {
-      name: 'asdasd',
-      password: "123123",
-      email: "minhtri11@gmail.com",
-      shopName: 'harend'
+      name,
+      password,
+      email,
+      shopName
     }
     register(data, async (value) => {
       console.log(value)
@@ -169,11 +169,11 @@ export class RegisterComponent extends React.Component<IPropsRegisterScreen, ISt
                 placeholder="Tên của bạn là ?"
               />
               <Input
-                label=""
+                label="Shop name"
                 onChange={value =>
-                  this.setState({ name: value.nativeEvent.text })
+                  this.setState({ shopName: value.nativeEvent.text })
                 }
-                placeholder="Tên của bạn là ?"
+                placeholder="Shop cua ban "
               />
               <TouchableOpacity
                 style={styles.touchbtn}

@@ -51,5 +51,5 @@ export const getListOrders = () => {
 
 export const createProduct = (body) => {
     const path = `/api/product`
-    return Api.POST_MULTIPART(path, body)
+    return Api.POST_MULTIPART<IResponeListProduct>(path, body)
 }

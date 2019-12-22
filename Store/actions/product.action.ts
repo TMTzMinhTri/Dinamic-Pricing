@@ -1,7 +1,7 @@
 import { Dispatch } from "redux"
 import { RootAction } from "../../Modals"
 import { getListProduct, getListOrders, createProduct } from "../../Api/Repository";
-import { GET_LIST_PRODUCT, GET_LIST_ORDERS } from "../../Modals/action";
+import { GET_LIST_PRODUCT, GET_LIST_ORDERS, CREATE_PRODUCT } from "../../Modals/action";
 
 
 
@@ -29,9 +29,14 @@ export const getorder = () => {
     }
 }
 
-export const CreateProduct = (data) => {
+export const CreateProduct = (data, callback) => {
     return async (dispatch: Dispatch<RootAction>) => {
         const rsp = await createProduct(data)
         console.log(rsp)
+        dispatch({
+            type: CREATE_PRODUCT,
+            payload: rsp.data
+        })
+        callback()
     }
 }
